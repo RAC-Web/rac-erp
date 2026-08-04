@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'apps.practice',
     'apps.conveyance',
     'apps.payroll',
+    'apps.reports',
 ]
 
 MIDDLEWARE = [

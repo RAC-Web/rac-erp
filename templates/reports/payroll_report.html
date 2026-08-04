@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block page_title %}Payroll Report{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Payroll Report</h4>
+    <a href="{% url 'reports:payroll_excel' %}" class="btn btn-success fw-bold shadow-sm">
+        <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Student</th>
+                        <th>Month</th>
+                        <th>Base Stipend</th>
+                        <th>Conveyance</th>
+                        <th>Bonus</th>
+                        <th>Late Ded.</th>
+                        <th>Leave Ded.</th>
+                        <th>Net Pay</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td class="ps-4 fw-semibold">{{ record.student.full_name }}</td>
+                        <td>{{ record.month|date:"F Y" }}</td>
+                        <td>BDT {{ record.base_stipend }}</td>
+                        <td>BDT {{ record.conveyance_allowance }}</td>
+                        <td>BDT {{ record.bonus }}</td>
+                        <td class="text-danger">BDT {{ record.late_deduction }}</td>
+                        <td class="text-danger">BDT {{ record.leave_deduction }}</td>
+                        <td class="fw-bold text-success">BDT {{ record.net_pay }}</td>
+                        <td>
+                            {% if record.status == 'Paid' %}
+                            <span class="badge bg-success">Paid</span>
+                            {% elif record.status == 'Generated' %}
+                            <span class="badge bg-primary">Generated</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Draft</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="text-center py-5 text-muted">No payroll records found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

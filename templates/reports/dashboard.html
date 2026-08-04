@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block page_title %}Reports Center{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4">Reports Center</h4>
+
+<div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <span class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                        <i class="bi bi-calendar-check fs-3 text-primary"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-2">Attendance Report</h5>
+                <p class="text-muted small mb-3">View and export monthly attendance data for all students.</p>
+                <a href="{% url 'reports:attendance' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-eye me-1"></i> View Report
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <span class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                        <i class="bi bi-cash-stack fs-3 text-success"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-2">Payroll Report</h5>
+                <p class="text-muted small mb-3">Review payroll history and export salary data to Excel.</p>
+                <a href="{% url 'reports:payroll' %}" class="btn btn-success rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-eye me-1"></i> View Report
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <span class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                        <i class="bi bi-envelope-paper fs-3 text-warning"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-2">Leave Summary</h5>
+                <p class="text-muted small mb-3">Track leave balances and approval status across the firm.</p>
+                <a href="{% url 'leave:leave_list' %}" class="btn btn-warning rounded-pill px-4 fw-semibold text-dark">
+                    <i class="bi bi-eye me-1"></i> View Leaves
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
