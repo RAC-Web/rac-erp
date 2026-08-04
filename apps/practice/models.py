@@ -1,5 +1,6 @@
 from django.db import models
 from apps.students.models import StudentProfile
+from apps.attendance.models import Attendance
 
 class Client(models.Model):
     STATUS_CHOICES = (
@@ -43,3 +44,13 @@ class Assignment(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.client.name})"
+
+class ClientVisit(models.Model):
+    attendance = models.OneToOneField(Attendance, on_delete=models.CASCADE, related_name='client_visit')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    work_type = models.ForeignKey(WorkType, on_delete=models.CASCADE)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Visit to {self.client.name} on {self.attendance.date}"

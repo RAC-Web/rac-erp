@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'apps.attendance',
     'apps.leave',
     'apps.practice',
+    'apps.conveyance',
 ]
 
 MIDDLEWARE = [

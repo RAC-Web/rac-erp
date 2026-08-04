@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, WorkType, Assignment
+from .models import Client, WorkType, Assignment, ClientVisit
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
@@ -19,3 +19,7 @@ class AssignmentAdmin(admin.ModelAdmin):
     list_filter = ('status', 'work_type')
     search_fields = ('title', 'client__name')
     filter_horizontal = ('assigned_students',)
+
+@admin.register(ClientVisit)
+class ClientVisitAdmin(admin.ModelAdmin):
+    list_display = ('attendance', 'client', 'assignment', 'work_type')
