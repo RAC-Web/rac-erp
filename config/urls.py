@@ -25,4 +25,5 @@ urlpatterns = [
     path('leave/', include('apps.leave.urls')),
     path('practice/', include('apps.practice.urls')),
     path('conveyance/', include('apps.conveyance.urls')),
+    path('payroll/', include('apps.payroll.urls')),
 ]

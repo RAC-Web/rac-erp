@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block page_title %}Payroll & Payslips{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Payroll History</h4>
+    {% if user.role == 'Principal' or user.role == 'Manager' %}
+    <a href="/admin/payroll/payrollrecord/add/" class="btn btn-primary fw-bold shadow-sm" target="_blank">
+        <i class="bi bi-gear-fill me-1"></i> Generate Payroll
+    </a>
+    {% endif %}
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        {% if user.role != 'Student' %}
+                        <th class="ps-4">Student</th>
+                        {% endif %}
+                        <th class="{% if user.role == 'Student' %}ps-4{% endif %}">Month</th>
+                        <th>Base Stipend</th>
+                        <th>Net Pay</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Payslip</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll in payrolls %}
+                    <tr>
+                        {% if user.role != 'Student' %}
+                        <td class="ps-4 fw-semibold">{{ payroll.student.full_name }}</td>
+                        {% endif %}
+                        <td class="{% if user.role == 'Student' %}ps-4{% endif %}">{{ payroll.month|date:"F Y" }}</td>
+                        <td>BDT {{ payroll.base_stipend }}</td>
+                        <td class="fw-bold text-success">BDT {{ payroll.net_pay }}</td>
+                        <td>
+                            {% if payroll.status == 'Paid' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Paid</span>
+                            {% elif payroll.status == 'Generated' %}
+                                <span class="badge bg-primary"><i class="bi bi-file-earmark-text me-1"></i>Generated</span>
+                            {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-pencil-square me-1"></i>Draft</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            {% if payroll.status != 'Draft' %}
+                            <a href="{% url 'payroll:payslip_pdf' payroll.pk %}" class="btn btn-sm btn-outline-danger shadow-sm">
+                                <i class="bi bi-filetype-pdf me-1"></i> Download
+                            </a>
+                            {% else %}
+                            <button class="btn btn-sm btn-light text-muted" disabled>Not Ready</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">No payroll records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
