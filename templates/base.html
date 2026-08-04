@@ -42,10 +42,10 @@
                 <a href="#" class="nav-link" hx-boost="true"><i class="bi bi-people-fill"></i> Students</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" hx-boost="true"><i class="bi bi-building"></i> Clients</a>
+                <a href="{% url 'practice:client_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-building"></i> Clients</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" hx-boost="true"><i class="bi bi-briefcase-fill"></i> Assignments</a>
+                <a href="{% url 'practice:assignment_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-briefcase-fill"></i> Assignments</a>
             </li>
             {% endif %}
             <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-calendar-check-fill"></i> Attendance</a></li>
