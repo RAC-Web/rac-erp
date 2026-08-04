@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-5">
+    <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 bg-primary bg-opacity-10 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-primary fw-bold mb-0 text-uppercase tracking-wider">Your Role</h6>
+                    <i class="bi bi-shield-check fs-2 text-primary opacity-75"></i>
+                </div>
+                <h2 class="fw-bold text-primary mb-1">{{ user.role }}</h2>
+                <p class="text-muted mb-0">Welcome back, {{ user.first_name|default:user.username }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 bg-success bg-opacity-10 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-success fw-bold mb-0 text-uppercase tracking-wider">Attendance</h6>
+                    <i class="bi bi-clock-history fs-2 text-success opacity-75"></i>
+                </div>
+                <h2 class="fw-bold text-success mb-1">Pending</h2>
+                <p class="text-muted mb-0">You have not marked IN today</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.role == 'Student' %}
+<div class="row g-4">
+    <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="bi bi-box-arrow-in-right text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="fw-bold mb-4">Mark Attendance</h4>
+                <button class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow mb-3 fw-bold">
+                    Mark IN Now
+                </button>
+                <p class="text-muted mt-2 mb-0">Current Time: <span id="clock" class="fw-bold text-dark font-monospace"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        const clock = document.getElementById('clock');
+        if (clock) clock.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
+{% endblock %}
