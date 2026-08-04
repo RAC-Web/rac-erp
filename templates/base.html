@@ -49,7 +49,7 @@
             </li>
             {% endif %}
             <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-calendar-check-fill"></i> Attendance</a></li>
-            <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-envelope-paper-fill"></i> Leave</a></li>
+            <li class="nav-item"><a href="{% url 'leave:leave_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-envelope-paper-fill"></i> Leave</a></li>
             <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-car-front-fill"></i> Conveyance</a></li>
             {% if user.role == 'Principal' or user.role == 'Manager' %}
             <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-cash-stack"></i> Payroll</a></li>
