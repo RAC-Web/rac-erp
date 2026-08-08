@@ -37,6 +37,12 @@ class Attendance(models.Model):
     
     # Track location if client visit is marked
     location = models.CharField(max_length=50, default='Office')
+    
+    # Exact Geographical coordinates
+    in_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    in_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    out_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    out_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     class Meta:
         unique_together = ('student', 'date')
@@ -55,3 +61,13 @@ class AttendanceLog(models.Model):
 
     def __str__(self):
         return f"Log: {self.attendance.date} by {self.manager.username if self.manager else 'System'}"
+
+class Holiday(models.Model):
+    date = models.DateField(unique=True)
+    description = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.date} - {self.description}"

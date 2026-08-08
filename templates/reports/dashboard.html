@@ -2,52 +2,48 @@
 {% block page_title %}Reports Center{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold mb-4">Reports Center</h4>
+<div class="page-header">
+    <h4><i class="bi bi-bar-chart-line-fill me-2 text-gradient"></i>Reports Center</h4>
+</div>
 
 <div class="row g-4">
     <div class="col-12 col-md-6 col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card report-card h-100 stagger-1">
             <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
-                        <i class="bi bi-calendar-check fs-3 text-primary"></i>
-                    </span>
+                <div class="report-icon mx-auto" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
+                    <i class="bi bi-calendar-check"></i>
                 </div>
                 <h5 class="fw-bold mb-2">Attendance Report</h5>
-                <p class="text-muted small mb-3">View and export monthly attendance data for all students.</p>
-                <a href="{% url 'reports:attendance' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                <p class="small mb-4" style="color: var(--elite-text-muted);">View and export monthly attendance data for all students.</p>
+                <a href="{% url 'reports:attendance' %}" class="btn btn-primary fw-semibold" style="border-radius: var(--elite-radius-full); padding: 10px 28px;">
                     <i class="bi bi-eye me-1"></i> View Report
                 </a>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-6 col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card report-card h-100 stagger-2">
             <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
-                        <i class="bi bi-cash-stack fs-3 text-success"></i>
-                    </span>
+                <div class="report-icon mx-auto" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald);">
+                    <i class="bi bi-cash-stack"></i>
                 </div>
                 <h5 class="fw-bold mb-2">Payroll Report</h5>
-                <p class="text-muted small mb-3">Review payroll history and export salary data to Excel.</p>
-                <a href="{% url 'reports:payroll' %}" class="btn btn-success rounded-pill px-4 fw-semibold">
+                <p class="small mb-4" style="color: var(--elite-text-muted);">Review payroll history and export salary data to Excel.</p>
+                <a href="{% url 'reports:payroll' %}" class="btn btn-success fw-semibold" style="border-radius: var(--elite-radius-full); padding: 10px 28px;">
                     <i class="bi bi-eye me-1"></i> View Report
                 </a>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-6 col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card report-card h-100 stagger-3">
             <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px;height:60px;">
-                        <i class="bi bi-envelope-paper fs-3 text-warning"></i>
-                    </span>
+                <div class="report-icon mx-auto" style="background: rgba(245,158,11,0.1); color: var(--elite-amber);">
+                    <i class="bi bi-envelope-paper"></i>
                 </div>
                 <h5 class="fw-bold mb-2">Leave Summary</h5>
-                <p class="text-muted small mb-3">Track leave balances and approval status across the firm.</p>
-                <a href="{% url 'leave:leave_list' %}" class="btn btn-warning rounded-pill px-4 fw-semibold text-dark">
+                <p class="small mb-4" style="color: var(--elite-text-muted);">Track leave balances and approval status across the firm.</p>
+                <a href="{% url 'leave:leave_list' %}" class="btn btn-warning fw-semibold" style="border-radius: var(--elite-radius-full); padding: 10px 28px;">
                     <i class="bi bi-eye me-1"></i> View Leaves
                 </a>
             </div>

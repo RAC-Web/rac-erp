@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5">
+        <div class="card" style="border-top: 3px solid; border-image: var(--elite-gradient-danger) 1;">
+            <div class="card-body p-5 text-center">
+                <div class="mb-3" style="animation: pulse 2s infinite;">
+                    <span class="stat-icon mx-auto" style="width: 72px; height: 72px; background: rgba(244,63,94,0.1); color: var(--elite-rose); font-size: 2rem; border-radius: var(--elite-radius-lg);">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                </div>
+                <h4 class="fw-bold mb-3">Are you sure?</h4>
+                <p class="mb-4" style="color: var(--elite-text-muted);">
+                    You are about to delete <strong style="color: var(--elite-text);">{{ object }}</strong>. This action cannot be undone.
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{{ cancel_url }}" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-danger px-4 fw-bold">
+                            <i class="bi bi-trash me-1"></i> Yes, Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

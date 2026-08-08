@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SalaryStructure, PayrollRecord
+from .models import SalaryStructure, PayrollRecord, PayrollPolicy
 
 @admin.register(SalaryStructure)
 class SalaryStructureAdmin(admin.ModelAdmin):
@@ -11,3 +11,7 @@ class PayrollRecordAdmin(admin.ModelAdmin):
     list_display = ('student', 'month', 'base_stipend', 'net_pay', 'status')
     list_filter = ('status', 'month')
     search_fields = ('student__full_name',)
+
+@admin.register(PayrollPolicy)
+class PayrollPolicyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'deduct_unapproved_leave', 'sandwich_rule_active', 'late_deduction_active')

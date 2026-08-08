@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block page_title %}Students{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h4><i class="bi bi-people-fill me-2 text-gradient"></i>Students Directory</h4>
+    <a href="{% url 'students:add' %}" class="btn btn-primary fw-bold">
+        <i class="bi bi-plus-lg me-1"></i> Add Student
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive elite-table-wrap">
+            <table class="table table-hover align-middle mb-0" id="dataTable">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Name</th>
+                        <th>Student ID</th>
+                        <th>Department</th>
+                        <th>Designation</th>
+                        <th>Phone</th>
+                        <th>Joining Date</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="elite-avatar" style="background: var(--elite-gradient-primary);">
+                                    {{ s.full_name|make_list|first|upper }}
+                                </span>
+                                <div>
+                                    <p class="fw-semibold mb-0">{{ s.full_name }}</p>
+                                    <p class="mb-0 small" style="color: var(--elite-text-muted);">{{ s.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="elite-badge elite-badge-secondary">{{ s.student_id }}</span></td>
+                        <td>{{ s.department }}</td>
+                        <td style="color: var(--elite-text-secondary);">{{ s.designation }}</td>
+                        <td class="small" style="color: var(--elite-text-muted);">{{ s.phone }}</td>
+                        <td class="small" style="color: var(--elite-text-muted);">{{ s.joining_date|date:"M d, Y" }}</td>
+                        <td>
+                            {% if s.status == 'Active' %}
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Active</span>
+                            {% elif s.status == 'Inactive' %}
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> Inactive</span>
+                            {% else %}
+                            <span class="elite-badge elite-badge-secondary">{{ s.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'students:edit' s.pk %}" class="btn btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'students:delete' s.pk %}" class="btn btn-outline-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-people d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No students registered yet.
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!$.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "info": true,
+                "lengthChange": false,
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search students..."
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

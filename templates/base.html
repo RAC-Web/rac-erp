@@ -4,76 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HRMS - RAC{% endblock %}</title>
+    <meta name="description" content="RAC HRMS — Human Resource Management System for Rahman Anis & Co., Chartered Accountants">
+
+    <!-- Prevent theme flash -->
+    <script>
+        (function() {
+            const t = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <!-- Elite Design System -->
+    <link rel="stylesheet" href="/static/css/elite.css?v=1.1">
+    <link rel="stylesheet" href="/static/css/custom.css?v=1.3">
+
+    <!-- JS Libraries (head) -->
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
-    <style>
-        :root { --sidebar-width: 260px; }
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; left: 0; padding-top: 70px; border-right: 1px solid var(--bs-border-color); background-color: var(--bs-body-bg); z-index: 1000; }
-        .main-content { margin-left: var(--sidebar-width); padding: 30px; padding-top: 90px; min-height: 100vh; }
-        .navbar-custom { position: fixed; top: 0; right: 0; left: var(--sidebar-width); z-index: 1030; background-color: rgba(var(--bs-body-bg-rgb), 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--bs-border-color); }
-        .nav-link { color: var(--bs-body-color); padding: 12px 20px; border-radius: 8px; margin: 5px 15px; font-weight: 500; transition: all 0.2s; }
-        .nav-link:hover, .nav-link.active { background-color: var(--bs-primary-bg-subtle); color: var(--bs-primary); }
-        .nav-link i { margin-right: 12px; font-size: 1.1em; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: 0.3s; }
-            .sidebar.show { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .navbar-custom { left: 0; }
-        }
-        .card { border: 1px solid var(--bs-border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-radius: 12px; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <!-- Animated Background Shapes -->
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
     {% if user.is_authenticated %}
-    <nav class="sidebar d-flex flex-column" id="sidebar">
-        <div class="px-4 mb-4">
-            <h4 class="fw-bold text-primary mb-0">RAC HRMS</h4>
-            <small class="text-muted fw-semibold">Rahman Anis & Co.</small>
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h4 class="fw-bold mb-0">RAC HRMS</h4>
+            <small>Rahman Anis & Co.</small>
         </div>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a href="{% url 'core:dashboard' %}" class="nav-link active" hx-boost="true"><i class="bi bi-grid-fill"></i> Dashboard</a>
+                <a href="{% url 'core:dashboard' %}" class="nav-link" data-nav-path="/" hx-boost="true">
+                    <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                </a>
             </li>
             {% if user.role == 'Principal' or user.role == 'Manager' %}
             <li class="nav-item">
-                <a href="#" class="nav-link" hx-boost="true"><i class="bi bi-people-fill"></i> Students</a>
+                <a href="{% url 'students:list' %}" class="nav-link" data-nav-path="/students/" hx-boost="true">
+                    <i class="bi bi-people-fill"></i> Students
+                </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'practice:client_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-building"></i> Clients</a>
+                <a href="{% url 'practice:client_list' %}" class="nav-link" data-nav-path="/practice/clients/" hx-boost="true">
+                    <i class="bi bi-building"></i> Clients
+                </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'practice:assignment_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-briefcase-fill"></i> Assignments</a>
+                <a href="{% url 'practice:assignment_list' %}" class="nav-link" data-nav-path="/practice/assignments/" hx-boost="true">
+                    <i class="bi bi-briefcase-fill"></i> Assignments
+                </a>
             </li>
             {% endif %}
-            <li class="nav-item"><a href="#" class="nav-link" hx-boost="true"><i class="bi bi-calendar-check-fill"></i> Attendance</a></li>
-            <li class="nav-item"><a href="{% url 'leave:leave_list' %}" class="nav-link" hx-boost="true"><i class="bi bi-envelope-paper-fill"></i> Leave</a></li>
-            <li class="nav-item"><a href="{% url 'conveyance:list' %}" class="nav-link" hx-boost="true"><i class="bi bi-car-front-fill"></i> Conveyance</a></li>
+            <li class="nav-item">
+                <a href="{% url 'attendance:list' %}" class="nav-link" data-nav-path="/attendance/" hx-boost="true">
+                    <i class="bi bi-calendar-check-fill"></i> Attendance
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'leave:leave_list' %}" class="nav-link" data-nav-path="/leave/" hx-boost="true">
+                    <i class="bi bi-envelope-paper-fill"></i> Leave
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'conveyance:list' %}" class="nav-link" data-nav-path="/conveyance/" hx-boost="true">
+                    <i class="bi bi-car-front-fill"></i> Conveyance
+                </a>
+            </li>
             {% if user.role == 'Principal' or user.role == 'Manager' %}
-            <li class="nav-item"><a href="{% url 'payroll:list' %}" class="nav-link" hx-boost="true"><i class="bi bi-cash-stack"></i> Payroll</a></li>
-            <li class="nav-item"><a href="{% url 'reports:dashboard' %}" class="nav-link" hx-boost="true"><i class="bi bi-file-earmark-bar-graph-fill"></i> Reports</a></li>
+            <li class="nav-item">
+                <a href="{% url 'payroll:list' %}" class="nav-link" data-nav-path="/payroll/" hx-boost="true">
+                    <i class="bi bi-cash-stack"></i> Payroll
+                </a>
+            </li>
+            <li class="nav-item mt-3 mb-1 px-3 text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;">
+                Admin Tools
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'core:send_announcement' %}" class="nav-link" data-nav-path="/announcement/" hx-boost="true">
+                    <i class="bi bi-megaphone-fill"></i> Send Message
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="{% url 'payroll:list' %}" class="nav-link" data-nav-path="/payroll/" hx-boost="true">
+                    <i class="bi bi-cash-stack"></i> My Payroll
+                </a>
+            </li>
+            {% endif %}
+            {% if user.role == 'Principal' or user.role == 'Manager' %}
+            <li class="nav-item">
+                <a href="{% url 'reports:dashboard' %}" class="nav-link" data-nav-path="/reports/" hx-boost="true">
+                    <i class="bi bi-bar-chart-line-fill"></i> Reports
+                </a>
+            </li>
             {% endif %}
         </ul>
     </nav>
-    <nav class="navbar navbar-expand-lg navbar-custom px-4 py-3">
+
+    <!-- ═══ TOP NAVBAR ═══ -->
+    <nav class="navbar navbar-expand-lg navbar-custom px-4">
         <div class="container-fluid">
-            <button class="btn btn-outline-secondary d-md-none me-3 border-0" id="sidebarToggle"><i class="bi bi-list fs-4"></i></button>
-            <h5 class="mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h5>
-            <div class="ms-auto d-flex align-items-center">
-                <button class="btn btn-link text-body fs-5" id="themeToggle"><i class="bi bi-moon-fill"></i></button>
-                <div class="dropdown ms-3">
-                    <a class="nav-link dropdown-toggle py-0" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle fs-4 me-1 align-middle"></i> <span class="fw-semibold align-middle">{{ user.username }}</span>
+            <button class="btn btn-light d-md-none me-3 border-0 p-2" id="sidebarToggle" aria-label="Toggle sidebar">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <h5 class="page-title mb-0">{% block page_title %}Dashboard{% endblock %}</h5>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <!-- Global Attendance Button -->
+                {% if user.role == 'Student' %}
+                    {% if not attendance_today_global %}
+                    <button type="button" class="btn btn-primary btn-sm px-3 fw-bold me-2" data-bs-toggle="modal" data-bs-target="#globalMarkInModal" style="border-radius: var(--elite-radius-full);">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Mark IN
+                    </button>
+                    {% elif not attendance_today_global.time_out %}
+                    <form method="post" action="{% url 'attendance:mark' %}" class="m-0 me-2" id="markOutForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="out_latitude" id="out_latitude">
+                        <input type="hidden" name="out_longitude" id="out_longitude">
+                        <button type="button" class="btn btn-warning btn-sm px-3 fw-bold" style="border-radius: var(--elite-radius-full);" onclick="handleMarkOut()">
+                            <i class="bi bi-box-arrow-right me-1"></i> Mark OUT
+                        </button>
+                    </form>
+                    {% else %}
+                    <button class="btn btn-light btn-sm px-3 fw-bold me-2" disabled style="border-radius: var(--elite-radius-full);">
+                        <i class="bi bi-check-circle me-1"></i> Done
+                    </button>
+                    {% endif %}
+                {% endif %}
+                <!-- Notification Bell -->
+                {% if user.is_authenticated %}
+                <div class="dropdown me-2">
+                    <button class="btn btn-light position-relative border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: var(--elite-radius-full); width: 38px; height: 38px; padding: 0;">
+                        <i class="bi bi-bell-fill" style="color: var(--elite-text-secondary);"></i>
+                        {% if unread_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            {{ unread_count }}
+                        </span>
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="width: 320px; max-height: 400px; overflow-y: auto; border-radius: var(--elite-radius-lg);">
+                        <li><h6 class="dropdown-header fw-bold text-dark">Notifications</h6></li>
+                        {% for notif in unread_notifications %}
+                        <li><a class="dropdown-item py-2 border-bottom text-wrap" href="#">
+                            <small class="d-block text-muted mb-1"><i class="bi bi-clock me-1"></i>{{ notif.created_at|timesince }} ago</small>
+                            <span style="font-size: 0.85rem;">{{ notif.message }}</span>
+                        </a></li>
+                        {% empty %}
+                        <li><span class="dropdown-item text-muted text-center py-3 small">No new notifications</span></li>
+                        {% endfor %}
+                        <li><hr class="dropdown-divider m-0"></li>
+                        <li><a class="dropdown-item text-center fw-bold py-2 text-primary bg-light" href="{% url 'core:mark_notifications_read' %}" style="font-size: 0.85rem;">
+                            <i class="bi bi-check2-all me-1"></i> Mark all as read
+                        </a></li>
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Theme Toggle -->
+                <button class="btn-theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="bi bi-moon-stars-fill"></i>
+                </button>
+
+                <!-- User Menu -->
+                <div class="dropdown">
+                    <a class="user-dropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="user-avatar">{{ user.username|make_list|first|upper }}</span>
+                        <span class="fw-semibold d-none d-sm-inline" style="font-size: 0.875rem;">{{ user.username }}</span>
+                        <i class="bi bi-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                <i class="bi bi-person-circle me-2"></i>Profile
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider mx-2"></li>
                         <li>
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="dropdown-item py-2 text-danger fw-semibold"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+                                <button type="submit" class="dropdown-item text-danger fw-semibold">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </button>
                             </form>
                         </li>
                     </ul>
@@ -81,41 +212,271 @@
             </div>
         </div>
     </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
     <main class="main-content" id="main-content">
-        <div class="container-fluid max-w-7xl">
+        <div class="container-fluid">
             {% if messages %}
                 {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show auto-dismiss-alert" role="alert" style="z-index: 1050;">
+                    <div class="d-flex align-items-center">
+                        {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        {% elif message.tags == 'warning' %}
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {% else %}
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        {% endif %}
+                        <span class="fw-semibold">{{ message }}</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endfor %}
             {% endif %}
             {% block content %}{% endblock %}
         </div>
     </main>
+
     {% else %}
         {% block auth_content %}{% endblock %}
     {% endif %}
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        document.body.addEventListener('htmx:configRequest', (event) => { event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}'; });
+    (function() {
+        /* ── HTMX CSRF ── */
+        document.body.addEventListener('htmx:configRequest', (e) => {
+            e.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+
+        /* ── Theme Toggle ── */
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
+            const updateIcon = (theme) => {
+                themeToggle.innerHTML = theme === 'light'
+                    ? '<i class="bi bi-moon-stars-fill"></i>'
+                    : '<i class="bi bi-sun-fill"></i>';
+            };
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            updateIcon(savedTheme);
+
             themeToggle.addEventListener('click', () => {
                 const html = document.documentElement;
                 const newTheme = html.getAttribute('data-bs-theme') === 'light' ? 'dark' : 'light';
                 html.setAttribute('data-bs-theme', newTheme);
-                themeToggle.innerHTML = newTheme === 'light' ? '<i class="bi bi-moon-fill"></i>' : '<i class="bi bi-sun-fill"></i>';
+                updateIcon(newTheme);
                 localStorage.setItem('theme', newTheme);
             });
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-bs-theme', savedTheme);
-            themeToggle.innerHTML = savedTheme === 'light' ? '<i class="bi bi-moon-fill"></i>' : '<i class="bi bi-sun-fill"></i>';
         }
-        const sidebarToggle = document.getElementById('sidebarToggle'), sidebar = document.getElementById('sidebar');
-        if (sidebarToggle && sidebar) sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        /* ── Sidebar Toggle (Mobile) ── */
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+
+        function openSidebar() {
+            if (sidebar) sidebar.classList.add('show');
+            if (backdrop) backdrop.classList.add('show');
+        }
+        function closeSidebar() {
+            if (sidebar) sidebar.classList.remove('show');
+            if (backdrop) backdrop.classList.remove('show');
+        }
+
+        if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+        if (backdrop) backdrop.addEventListener('click', closeSidebar);
+
+        /* ── Sidebar Active State Detection ── */
+        function updateSidebarActive() {
+            const path = window.location.pathname;
+            const links = document.querySelectorAll('.sidebar .nav-link');
+            links.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                if (!href) return;
+
+                // Exact match for dashboard (root "/")
+                if (href === '/' && path === '/') {
+                    link.classList.add('active');
+                }
+                // Prefix match for other pages
+                else if (href !== '/' && path.startsWith(href)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        updateSidebarActive();
+
+        // Re-run on HTMX navigation
+        document.body.addEventListener('htmx:afterSettle', updateSidebarActive);
+
+        /* ── Auto-dismiss alerts ── */
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.auto-dismiss-alert').forEach(alert => {
+                setTimeout(() => {
+                    try {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    } catch(e) {}
+                }, 5000);
+            });
+        });
+
+        /* ── DataTable Global Re-init for HTMX ── */
+        document.body.addEventListener('htmx:afterSwap', () => {
+            const dt = document.getElementById('dataTable');
+            if (dt && $.fn.DataTable && !$.fn.DataTable.isDataTable(dt)) {
+                $(dt).DataTable({
+                    pageLength: 10,
+                    ordering: true,
+                    info: true,
+                    lengthChange: false,
+                    language: { search: "", searchPlaceholder: "Search..." }
+                });
+            }
+        });
+    })();
     </script>
+
+    <!-- Global Mark IN Modal -->
+    {% if user.role == 'Student' and not attendance_today_global %}
+    <div class="modal fade" id="globalMarkInModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form method="post" action="{% url 'attendance:mark' %}" id="markInForm">
+            {% csrf_token %}
+            <input type="hidden" name="in_latitude" id="in_latitude">
+            <input type="hidden" name="in_longitude" id="in_longitude">
+            <div class="modal-header">
+              <h5 class="modal-title fw-bold"><i class="bi bi-geo-alt-fill me-2 text-gradient"></i>Mark Attendance</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Work Location</label>
+                    <select name="location" class="form-select form-select-lg" id="globalWorkLocationSelect" onchange="toggleGlobalClientFields(this.value)">
+                        <option value="Office">🏢 Office</option>
+                        <option value="Client Office">🏗️ Client Office</option>
+                    </select>
+                </div>
+                <div id="globalClientFields" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Client</label>
+                        <select name="client" class="form-select">
+                            <option value="">Select Client</option>
+                            {% for client in clients_global %}
+                            <option value="{{ client.id }}">{{ client.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Assignment</label>
+                        <select name="assignment" class="form-select">
+                            <option value="">Select Assignment</option>
+                            {% for assignment in assignments_global %}
+                            <option value="{{ assignment.id }}">{{ assignment.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Work Type</label>
+                        <select name="work_type" class="form-select">
+                            <option value="">Select Work Type</option>
+                            {% for wt in work_types_global %}
+                            <option value="{{ wt.id }}">{{ wt.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Remarks</label>
+                        <textarea name="remarks" class="form-control" rows="2" placeholder="Brief note about the visit..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary px-4 fw-bold" id="markInSubmitBtn" onclick="handleMarkIn()">
+                  <i class="bi bi-check-circle me-1"></i> Confirm Check-IN
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+    function toggleGlobalClientFields(val) {
+        document.getElementById('globalClientFields').style.display = val === 'Client Office' ? 'block' : 'none';
+    }
+    </script>
+    {% endif %}
+
+    <script>
+    function fetchLocation(callback) {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    callback(position.coords.latitude, position.coords.longitude);
+                },
+                function(error) {
+                    alert("Location access denied or unavailable. Please enable location to mark attendance.");
+                    callback(null, null);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+            callback(null, null);
+        }
+    }
+
+    function handleMarkIn() {
+        const btn = document.getElementById('markInSubmitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="spinner-border spinner-border-sm me-1"></i> Getting Location...';
+        btn.disabled = true;
+
+        fetchLocation(function(lat, lng) {
+            if (lat && lng) {
+                document.getElementById('in_latitude').value = lat;
+                document.getElementById('in_longitude').value = lng;
+                document.getElementById('markInForm').submit();
+            } else {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function handleMarkOut() {
+        var conf = prompt("Please type 'Confirm' to Mark OUT and submit.");
+        if (conf && conf.toLowerCase() === 'confirm') {
+            const form = document.getElementById('markOutForm');
+            const btn = form.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="spinner-border spinner-border-sm me-1"></i> Getting Location...';
+            btn.disabled = true;
+
+            fetchLocation(function(lat, lng) {
+                if (lat && lng) {
+                    document.getElementById('out_latitude').value = lat;
+                    document.getElementById('out_longitude').value = lng;
+                    form.submit();
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        } else if (conf !== null) {
+            alert("You must correctly type 'Confirm' to submit!");
+        }
+    }
+    </script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

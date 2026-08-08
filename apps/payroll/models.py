@@ -42,3 +42,17 @@ class PayrollRecord(models.Model):
     
     class Meta:
         unique_together = ('student', 'month')
+
+class PayrollPolicy(models.Model):
+    name = models.CharField(max_length=100, default='Default Policy')
+    deduct_unapproved_leave = models.BooleanField(default=True, help_text="Deduct 1 day salary for unapproved absences")
+    sandwich_rule_active = models.BooleanField(default=True, help_text="Deduct holiday salary if absent adjacent to holiday")
+    late_deduction_active = models.BooleanField(default=True)
+    first_lates_for_penalty = models.IntegerField(default=3, help_text="Number of initial late days that equal 1 absent day")
+    subsequent_lates_for_penalty = models.IntegerField(default=2, help_text="Number of subsequent late days that equal 1 absent day")
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Payroll Policies"

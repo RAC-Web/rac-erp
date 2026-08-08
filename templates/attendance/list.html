@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block page_title %}Attendance History{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h4><i class="bi bi-calendar-check-fill me-2 text-gradient"></i>Attendance Tracker</h4>
+    {% if user.role != 'Student' %}
+    <a href="{% url 'attendance:add' %}" class="btn btn-primary fw-bold">
+        <i class="bi bi-plus-lg me-1"></i> Add Record
+    </a>
+    {% endif %}
+</div>
+
+<!-- Filters -->
+<div class="card mb-4 stagger-1">
+    <div class="card-body p-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Month</label>
+                <select name="month" class="form-select">
+                    <option value="">All Months</option>
+                    <option value="1" {% if month == '1' %}selected{% endif %}>January</option>
+                    <option value="2" {% if month == '2' %}selected{% endif %}>February</option>
+                    <option value="3" {% if month == '3' %}selected{% endif %}>March</option>
+                    <option value="4" {% if month == '4' %}selected{% endif %}>April</option>
+                    <option value="5" {% if month == '5' %}selected{% endif %}>May</option>
+                    <option value="6" {% if month == '6' %}selected{% endif %}>June</option>
+                    <option value="7" {% if month == '7' %}selected{% endif %}>July</option>
+                    <option value="8" {% if month == '8' %}selected{% endif %}>August</option>
+                    <option value="9" {% if month == '9' %}selected{% endif %}>September</option>
+                    <option value="10" {% if month == '10' %}selected{% endif %}>October</option>
+                    <option value="11" {% if month == '11' %}selected{% endif %}>November</option>
+                    <option value="12" {% if month == '12' %}selected{% endif %}>December</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Year</label>
+                <input type="number" name="year" class="form-control" value="{{ year|default:'' }}" placeholder="e.g. 2026">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 fw-bold">
+                    <i class="bi bi-funnel me-1"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card stagger-2">
+    <div class="card-body p-0">
+        <div class="table-responsive elite-table-wrap">
+            <table class="table table-hover align-middle mb-0" id="dataTable">
+                <thead>
+                    <tr>
+                        {% if user.role != 'Student' %}
+                        <th class="ps-4">Student</th>
+                        {% endif %}
+                        <th class="{% if user.role == 'Student' %}ps-4{% endif %}">Date</th>
+                        <th>Time IN</th>
+                        <th>Time OUT</th>
+                        <th>Working Hrs</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        {% if user.role != 'Student' %}
+                        <th class="text-end pe-4">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        {% if user.role != 'Student' %}
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="elite-avatar" style="background: var(--elite-gradient-primary); width: 30px; height: 30px; font-size: 0.65rem;">
+                                    {{ record.student.full_name|make_list|first|upper }}
+                                </span>
+                                <span class="fw-semibold">{{ record.student.full_name }}</span>
+                            </div>
+                        </td>
+                        {% endif %}
+                        <td class="{% if user.role == 'Student' %}ps-4{% endif %}">{{ record.date|date:"M d, Y" }}</td>
+                        <td>{{ record.time_in|time:"h:i A"|default:"—" }}</td>
+                        <td>{{ record.time_out|time:"h:i A"|default:"—" }}</td>
+                        <td>
+                            {% if record.working_hours %}
+                            <span class="fw-semibold">{{ record.working_hours }}h</span>
+                            {% else %}—{% endif %}
+                        </td>
+                        <td>
+                            {% if record.status == 'Present' %}
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Present</span>
+                            {% elif record.status == 'Late' %}
+                            <span class="elite-badge elite-badge-warning"><span class="dot"></span> Late</span>
+                            {% elif record.status == 'Absent' %}
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> Absent</span>
+                            {% elif record.status == 'Leave' %}
+                            <span class="elite-badge elite-badge-info"><span class="dot"></span> Leave</span>
+                            {% else %}
+                            <span class="elite-badge elite-badge-secondary">{{ record.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="small" style="color: var(--elite-text-muted);">
+                            {{ record.location }}
+                            {% if record.in_latitude and record.in_longitude %}
+                            <br><a href="https://www.google.com/maps?q={{ record.in_latitude }},{{ record.in_longitude }}" target="_blank" class="text-decoration-none" title="IN Location"><i class="bi bi-geo-alt text-primary"></i> In</a>
+                            {% endif %}
+                            {% if record.out_latitude and record.out_longitude %}
+                            <span class="text-muted mx-1">|</span><a href="https://www.google.com/maps?q={{ record.out_latitude }},{{ record.out_longitude }}" target="_blank" class="text-decoration-none" title="OUT Location"><i class="bi bi-geo-alt text-warning"></i> Out</a>
+                            {% endif %}
+                        </td>
+                        {% if user.role != 'Student' %}
+                        <td class="text-end pe-4">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'attendance:edit' record.pk %}" class="btn btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'attendance:delete' record.pk %}" class="btn btn-outline-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-calendar-x d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No attendance records found.
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!$.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "order": [[{% if user.role != 'Student' %}1{% else %}0{% endif %}, "desc"]],
+                "info": true,
+                "lengthChange": false,
+                "language": { "search": "", "searchPlaceholder": "Search attendance..." }
+            });
+        }
+    });
+</script>
+{% endblock %}

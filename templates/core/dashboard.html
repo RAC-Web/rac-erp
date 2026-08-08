@@ -4,115 +4,146 @@
 {% block content %}
 
 {% if user.role == 'Principal' or user.role == 'Manager' %}
-<!-- ===== PRINCIPAL / MANAGER DASHBOARD ===== -->
+<!-- ═══════════════════════════════════════════════════════
+     PRINCIPAL / MANAGER DASHBOARD
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- Welcome Banner -->
+<div class="welcome-banner stagger-1">
+    <h3>
+        {% now "H" as current_hour %}
+        {% if current_hour|add:"0" < 12 %}Good Morning{% elif current_hour|add:"0" < 17 %}Good Afternoon{% else %}Good Evening{% endif %}, {{ user.first_name|default:user.username }} 👋
+    </h3>
+    <p>Here's what's happening at Rahman Anis & Co. today.</p>
+</div>
+
+<!-- Row 1: Primary KPI Cards -->
 <div class="row g-4 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Total Students</span>
-                    <span class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-people-fill text-primary"></i>
-                    </span>
+        <a href="{% url 'students:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-primary h-100 stagger-1">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Total Students</span>
+                        <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
+                            <i class="bi bi-people-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value">{{ total_students|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0">{{ total_students|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Present Today</span>
-                    <span class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                    </span>
+        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-success h-100 stagger-2">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Present Today</span>
+                        <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald);">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-emerald);">{{ present_today|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0 text-success">{{ present_today|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Pending Leaves</span>
-                    <span class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-hourglass-split text-warning"></i>
-                    </span>
+        <a href="{% url 'leave:leave_list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-warning h-100 stagger-3">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Pending Leaves</span>
+                        <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber);">
+                            <i class="bi bi-hourglass-split"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-amber);">{{ pending_leaves|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0 text-warning">{{ pending_leaves|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Active Assignments</span>
-                    <span class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-briefcase-fill text-info"></i>
-                    </span>
+        <a href="{% url 'practice:assignment_list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-info h-100 stagger-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Active Assignments</span>
+                        <span class="stat-icon" style="background: rgba(14,165,233,0.1); color: var(--elite-sky);">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-sky);">{{ active_assignments|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0 text-info">{{ active_assignments|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
+<!-- Row 2: Secondary KPI Cards -->
 <div class="row g-4 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Absent Today</span>
-                    <span class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-x-circle-fill text-danger"></i>
-                    </span>
+        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-danger h-100 stagger-5">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Absent Today</span>
+                        <span class="stat-icon" style="background: rgba(244,63,94,0.1); color: var(--elite-rose);">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-rose);">{{ absent_today|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0 text-danger">{{ absent_today|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Pending Bills</span>
-                    <span class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-car-front-fill text-secondary"></i>
-                    </span>
+        <a href="{% url 'conveyance:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-dark h-100 stagger-6">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Pending Bills</span>
+                        <span class="stat-icon" style="background: var(--elite-surface-elevated); color: var(--elite-text-secondary);">
+                            <i class="bi bi-receipt-cutoff"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value">{{ pending_conveyances|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0">{{ pending_conveyances|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Active Clients</span>
-                    <span class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-building text-primary"></i>
-                    </span>
+        <a href="{% url 'practice:client_list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-primary h-100 stagger-7">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Active Clients</span>
+                        <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
+                            <i class="bi bi-building"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value">{{ active_clients|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0">{{ active_clients|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
 <!-- Recent Activity Tables -->
-<div class="row g-4">
-    <div class="col-md-7">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 p-4 pb-0">
-                <h5 class="fw-bold mb-0">Today's Attendance</h5>
+<div class="row g-4 mb-4">
+    <div class="col-lg-7">
+        <div class="card stagger-5">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-gradient"></i>Today's Attendance</h6>
+                    <a href="{% url 'attendance:list' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
             </div>
             <div class="card-body p-0">
-                <div class="table-responsive">
+                <div class="table-responsive elite-table-wrap">
                     <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th class="ps-4">Student</th>
                                 <th>Time IN</th>
@@ -123,21 +154,31 @@
                         <tbody>
                             {% for att in recent_attendance %}
                             <tr>
-                                <td class="ps-4 fw-semibold">{{ att.student.full_name }}</td>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="elite-avatar" style="background: var(--elite-gradient-primary); width: 32px; height: 32px; font-size: 0.7rem;">
+                                            {{ att.student.full_name|make_list|first|upper }}
+                                        </span>
+                                        <span class="fw-semibold">{{ att.student.full_name }}</span>
+                                    </div>
+                                </td>
                                 <td>{{ att.time_in|time:"h:i A" }}</td>
                                 <td>
                                     {% if att.status == 'Present' %}
-                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Present</span>
+                                    <span class="elite-badge elite-badge-success"><span class="dot"></span> Present</span>
                                     {% elif att.status == 'Late' %}
-                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">Late</span>
+                                    <span class="elite-badge elite-badge-warning"><span class="dot"></span> Late</span>
                                     {% else %}
-                                    <span class="badge bg-secondary">{{ att.status }}</span>
+                                    <span class="elite-badge elite-badge-secondary">{{ att.status }}</span>
                                     {% endif %}
                                 </td>
-                                <td class="small text-muted">{{ att.location }}</td>
+                                <td class="small" style="color: var(--elite-text-muted);">{{ att.location }}</td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="4" class="text-center py-4 text-muted">No records yet today.</td></tr>
+                            <tr><td colspan="4" class="text-center py-5" style="color: var(--elite-text-muted);">
+                                <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                                No records yet today.
+                            </td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -145,31 +186,46 @@
             </div>
         </div>
     </div>
-    <div class="col-md-5">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-0 p-4 pb-0">
-                <h5 class="fw-bold mb-0">Recent Leave Requests</h5>
+    <div class="col-lg-5">
+        <div class="card stagger-6">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-envelope-paper me-2 text-gradient"></i>Recent Leaves</h6>
+                    <a href="{% url 'leave:leave_list' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
                     {% for req in recent_leaves %}
-                    <div class="list-group-item border-0 px-4 py-3">
+                    <div class="list-group-item border-0 px-4 py-3" style="background: transparent;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="fw-semibold mb-0">{{ req.student.full_name }}</p>
-                                <p class="text-muted small mb-0">{{ req.leave_type.name }} &middot; {{ req.start_date|date:"M d" }} - {{ req.end_date|date:"M d" }}</p>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="elite-avatar" style="background: var(--elite-gradient-info); width: 28px; height: 28px; font-size: 0.6rem;">
+                                        {{ req.student.full_name|make_list|first|upper }}
+                                    </span>
+                                    <span class="fw-semibold" style="font-size: 0.9rem;">{{ req.student.full_name }}</span>
+                                </div>
+                                <p class="mb-0 small" style="color: var(--elite-text-muted); padding-left: 36px;">
+                                    {{ req.leave_type.name }} &middot; {{ req.start_date|date:"M d" }} – {{ req.end_date|date:"M d" }}
+                                </p>
                             </div>
                             {% if req.status == 'Pending' %}
-                            <span class="badge bg-warning text-dark">Pending</span>
+                            <span class="elite-badge elite-badge-warning"><span class="dot"></span> Pending</span>
                             {% elif req.status == 'Principal Approved' %}
-                            <span class="badge bg-success">Approved</span>
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Approved</span>
+                            {% elif req.status == 'Manager Approved' %}
+                            <span class="elite-badge elite-badge-info"><span class="dot"></span> L1</span>
                             {% else %}
-                            <span class="badge bg-secondary">{{ req.status }}</span>
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> {{ req.status }}</span>
                             {% endif %}
                         </div>
                     </div>
                     {% empty %}
-                    <div class="list-group-item border-0 px-4 py-4 text-center text-muted">No recent requests.</div>
+                    <div class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No recent requests.
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -177,173 +233,332 @@
     </div>
 </div>
 
+<!-- Charts Section -->
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card stagger-7 h-100">
+            <div class="card-header">
+                <h6 class="fw-bold mb-0"><i class="bi bi-graph-up me-2 text-gradient"></i>Attendance Trend (Last 7 Days)</h6>
+            </div>
+            <div class="card-body p-4">
+                <canvas id="attendanceTrendChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card stagger-8 h-100">
+            <div class="card-header">
+                <h6 class="fw-bold mb-0"><i class="bi bi-pie-chart me-2 text-gradient"></i>Leave Distribution</h6>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+                <canvas id="leaveStatusChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(63,63,70,0.3)' : 'rgba(148,163,184,0.12)';
+        const textColor = isDark ? '#a1a1aa' : '#64748b';
+
+        // Attendance Trend — Gradient Area Chart
+        const attCtx = document.getElementById('attendanceTrendChart');
+        if (attCtx) {
+            const ctx = attCtx.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+            gradient.addColorStop(0, 'rgba(99,102,241,0.2)');
+            gradient.addColorStop(1, 'rgba(99,102,241,0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ attendance_trend_labels|safe }},
+                    datasets: [{
+                        label: 'Students Present',
+                        data: {{ attendance_trend_data|safe }},
+                        borderColor: '#6366f1',
+                        backgroundColor: gradient,
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.45,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#6366f1',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? '#27272a' : '#fff',
+                            titleColor: isDark ? '#fafafa' : '#0f172a',
+                            bodyColor: isDark ? '#a1a1aa' : '#64748b',
+                            borderColor: isDark ? 'rgba(63,63,70,0.5)' : 'rgba(148,163,184,0.2)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 10,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Leave Status — Doughnut Chart
+        const leaveCtx = document.getElementById('leaveStatusChart');
+        if (leaveCtx) {
+            const leaveLabels = {{ leave_chart_labels|safe }};
+            const leaveData = {{ leave_chart_data|safe }};
+            const bgColors = leaveLabels.map(label => {
+                if(label === 'Pending') return '#f59e0b';
+                if(label.includes('Approved')) return '#10b981';
+                return '#f43f5e';
+            });
+
+            new Chart(leaveCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: leaveLabels,
+                    datasets: [{
+                        data: leaveData,
+                        backgroundColor: bgColors,
+                        borderWidth: 0,
+                        borderRadius: 4,
+                        spacing: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '72%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: textColor, padding: 16, usePointStyle: true, pointStyleWidth: 8, font: { size: 12 } }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? '#27272a' : '#fff',
+                            titleColor: isDark ? '#fafafa' : '#0f172a',
+                            bodyColor: isDark ? '#a1a1aa' : '#64748b',
+                            borderColor: isDark ? 'rgba(63,63,70,0.5)' : 'rgba(148,163,184,0.2)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 10
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
 {% elif user.role == 'Student' %}
-<!-- ===== STUDENT DASHBOARD ===== -->
+<!-- ═══════════════════════════════════════════════════════
+     STUDENT DASHBOARD
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- Welcome Banner -->
+<div class="welcome-banner stagger-1">
+    <h3>
+        {% now "H" as current_hour %}
+        {% if current_hour|add:"0" < 12 %}Good Morning{% elif current_hour|add:"0" < 17 %}Good Afternoon{% else %}Good Evening{% endif %}, {{ user.first_name|default:user.username }} 👋
+    </h3>
+    <p>Your daily overview and attendance tracker.</p>
+</div>
+
+<!-- Student KPI Cards -->
 <div class="row g-4 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card elite-stat-card stat-primary h-100 stagger-1">
             <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Your Role</span>
-                    <span class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-shield-check text-primary"></i>
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="stat-label">Your Role</span>
+                    <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
+                        <i class="bi bi-shield-check"></i>
                     </span>
                 </div>
-                <h3 class="fw-bold mb-0 text-primary">{{ user.role }}</h3>
-                <p class="text-muted small mb-0">Welcome, {{ user.first_name|default:user.username }}</p>
+                <div class="stat-value text-gradient" style="font-size: 1.3rem;">{{ user.role }}</div>
+                <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">{{ user.first_name|default:user.username }}</p>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Days Present</span>
-                    <span class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                    </span>
+        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-success h-100 stagger-2">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Days Present</span>
+                        <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald);">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-emerald);">{{ days_present|default:"0" }}</div>
+                    <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">This month</p>
                 </div>
-                <h2 class="fw-bold mb-0 text-success">{{ days_present|default:"0" }}</h2>
-                <p class="text-muted small mb-0">This month</p>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Days Late</span>
-                    <span class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
-                    </span>
+        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-warning h-100 stagger-3">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Days Late</span>
+                        <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber);">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-amber);">{{ days_late|default:"0" }}</div>
+                    <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">This month</p>
                 </div>
-                <h2 class="fw-bold mb-0 text-warning">{{ days_late|default:"0" }}</h2>
-                <p class="text-muted small mb-0">This month</p>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted small fw-semibold text-uppercase">Pending Leaves</span>
-                    <span class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;">
-                        <i class="bi bi-hourglass-split text-danger"></i>
-                    </span>
+        <a href="{% url 'leave:leave_list' %}" class="text-decoration-none">
+            <div class="card elite-stat-card stat-danger h-100 stagger-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="stat-label">Pending Leaves</span>
+                        <span class="stat-icon" style="background: rgba(244,63,94,0.1); color: var(--elite-rose);">
+                            <i class="bi bi-hourglass-split"></i>
+                        </span>
+                    </div>
+                    <div class="stat-value" style="color: var(--elite-rose);">{{ pending_leaves|default:"0" }}</div>
                 </div>
-                <h2 class="fw-bold mb-0 text-danger">{{ pending_leaves|default:"0" }}</h2>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
-<!-- Mark Attendance Section -->
-<div class="row g-4">
+<!-- Mark Attendance + Clock -->
+<div class="row g-4 mb-4">
     <div class="col-12 col-md-6">
-        <div class="card border-0 shadow-sm">
+        <div class="card stagger-5">
             <div class="card-body p-5 text-center">
-                <div class="mb-4">
-                    <i class="bi bi-box-arrow-in-right text-primary" style="font-size: 3rem;"></i>
+                <div class="mb-3">
+                    <span class="clock-widget" id="clock"></span>
                 </div>
+                <p class="mb-4 small" style="color: var(--elite-text-muted);">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    <span id="dateDisplay"></span>
+                </p>
+
                 {% if not attendance_today %}
-                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow mb-3 fw-bold" data-bs-toggle="modal" data-bs-target="#markInModal">
-                    Mark IN Now
-                </button>
+                <p class="text-danger fw-bold"><i class="bi bi-exclamation-circle me-1"></i> You haven't marked your attendance yet.</p>
+                <p class="small text-muted">Use the <strong>Mark IN</strong> button in the top right menu to check in.</p>
                 {% elif not attendance_today.time_out %}
-                <form method="post" action="{% url 'attendance:mark' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-lg rounded-pill px-5 py-3 shadow mb-3 fw-bold">
-                        Mark OUT Now
-                    </button>
-                </form>
+                <p class="text-warning fw-bold"><i class="bi bi-clock-history me-1"></i> Currently working...</p>
+                <p class="small text-muted">Use the <strong>Mark OUT</strong> button in the top right menu to check out.</p>
                 {% else %}
-                <button class="btn btn-secondary btn-lg rounded-pill px-5 py-3 shadow mb-3 fw-bold" disabled>
-                    Marked OUT ({{ attendance_today.working_hours }} hrs)
+                <button class="btn btn-light btn-lg px-5 py-3 fw-bold" disabled style="border-radius: var(--elite-radius-full);">
+                    <i class="bi bi-check-circle me-2"></i> Done ({{ attendance_today.working_hours }} hrs)
                 </button>
                 {% endif %}
-                <p class="text-muted mt-2 mb-0">Current Time: <span id="clock" class="fw-bold text-dark font-monospace"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-12 col-md-6">
+        <div class="card stagger-6 h-100">
+            <div class="card-header">
+                <h6 class="fw-bold mb-0"><i class="bi bi-lightning-fill me-2 text-gradient"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body d-flex flex-column gap-3 p-4">
+                <a href="{% url 'leave:apply_leave' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
+                    <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber); width: 40px; height: 40px;">
+                        <i class="bi bi-envelope-paper-fill"></i>
+                    </span>
+                    <div>
+                        <span class="fw-semibold d-block">Apply for Leave</span>
+                        <small style="color: var(--elite-text-muted);">Submit a new leave request</small>
+                    </div>
+                </a>
+                <a href="{% url 'conveyance:submit' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
+                    <span class="stat-icon" style="background: rgba(14,165,233,0.1); color: var(--elite-sky); width: 40px; height: 40px;">
+                        <i class="bi bi-car-front-fill"></i>
+                    </span>
+                    <div>
+                        <span class="fw-semibold d-block">Submit Conveyance</span>
+                        <small style="color: var(--elite-text-muted);">File a travel expense claim</small>
+                    </div>
+                </a>
+                <a href="{% url 'payroll:list' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
+                    <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald); width: 40px; height: 40px;">
+                        <i class="bi bi-cash-stack"></i>
+                    </span>
+                    <div>
+                        <span class="fw-semibold d-block">View Payroll</span>
+                        <small style="color: var(--elite-text-muted);">Check payslips & salary</small>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Mark IN Modal -->
-{% if not attendance_today %}
-<div class="modal fade" id="markInModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content border-0 shadow">
-      <form method="post" action="{% url 'attendance:mark' %}">
-        {% csrf_token %}
-        <div class="modal-header bg-light border-0">
-          <h5 class="modal-title fw-bold">Mark Attendance</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4">
-            <div class="mb-4">
-                <label class="form-label fw-bold">Work Location</label>
-                <select name="location" class="form-select form-select-lg" id="workLocationSelect" onchange="toggleClientFields(this.value)">
-                    <option value="Office">Office</option>
-                    <option value="Client Office">Client Office</option>
-                </select>
-            </div>
-            <div id="clientFields" style="display: none;">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Client</label>
-                    <select name="client" class="form-select">
-                        <option value="">Select Client</option>
-                        {% for client in clients %}
-                        <option value="{{ client.id }}">{{ client.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Assignment</label>
-                    <select name="assignment" class="form-select">
-                        <option value="">Select Assignment</option>
-                        {% for assignment in assignments %}
-                        <option value="{{ assignment.id }}">{{ assignment.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Work Type</label>
-                    <select name="work_type" class="form-select">
-                        <option value="">Select Work Type</option>
-                        {% for wt in work_types %}
-                        <option value="{{ wt.id }}">{{ wt.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Remarks</label>
-                    <textarea name="remarks" class="form-control" rows="2" placeholder="Brief note about the visit..."></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">Confirm Check-IN</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<script>
-function toggleClientFields(val) {
-    document.getElementById('clientFields').style.display = val === 'Client Office' ? 'block' : 'none';
-}
-</script>
-{% endif %}
+
 
 {% endif %}
 
+<!-- Clock & Date Script (shared) -->
 <script>
     function updateClock() {
         const now = new Date();
         const clock = document.getElementById('clock');
         if (clock) clock.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        const dateEl = document.getElementById('dateDisplay');
+        if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
     setInterval(updateClock, 1000);
     updateClock();
 </script>
+
+{% if popup_notification %}
+<!-- Custom Announcement Popup Overlay -->
+<div id="customPopupOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1050; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div style="background: white; border-radius: var(--elite-radius-lg); max-width: 400px; width: 90%; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: scale(1); transition: transform 0.3s ease-out;">
+        <div style="background: var(--elite-gradient-primary); padding: 15px 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <h5 style="margin:0; font-weight: bold; font-size: 1.1rem;"><i class="bi bi-megaphone-fill me-2"></i>New Announcement</h5>
+        </div>
+        <div style="padding: 30px 20px; text-align: center;">
+            <i class="bi bi-envelope-paper-heart text-primary mb-3" style="font-size: 3rem;"></i>
+            <p style="font-size: 1.1rem; color: var(--elite-text-primary); margin:0;">{{ popup_notification.message }}</p>
+        </div>
+        <div style="padding: 15px 20px; text-align: center; border-top: 1px solid rgba(0,0,0,0.05);">
+            <button onclick="closeCustomPopup()" class="btn btn-primary px-5 fw-bold" style="border-radius: var(--elite-radius-full);">Got it!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function closeCustomPopup() {
+    // Hide the overlay immediately
+    var overlay = document.getElementById('customPopupOverlay');
+    if(overlay) {
+        overlay.style.display = 'none';
+    }
+    
+    // Notify server to not show it again
+    fetch("{% url 'core:dismiss_popup' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    }).catch(err => console.log("Error dismissing popup:", err));
+}
+</script>
+{% endif %}
+
 {% endblock %}

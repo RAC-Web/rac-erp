@@ -2,20 +2,27 @@
 {% block page_title %}Leave Requests{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0">My Leaves</h4>
-    {% if user.role == 'Student' %}
-    <a href="{% url 'leave:apply_leave' %}" class="btn btn-primary fw-bold shadow-sm">
-        <i class="bi bi-plus-lg me-1"></i> Apply Leave
-    </a>
-    {% endif %}
+<div class="page-header">
+    <h4><i class="bi bi-envelope-paper-fill me-2 text-gradient"></i>Leave Directory</h4>
+    <div class="d-flex gap-2">
+        {% if user.role != 'Student' %}
+        <a href="{% url 'leave:add' %}" class="btn btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i> Add Leave
+        </a>
+        {% endif %}
+        {% if user.role == 'Student' %}
+        <a href="{% url 'leave:apply_leave' %}" class="btn btn-primary fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> Apply Leave
+        </a>
+        {% endif %}
+    </div>
 </div>
 
-<div class="card border-0 shadow-sm">
+<div class="card">
     <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+        <div class="table-responsive elite-table-wrap">
+            <table class="table table-hover align-middle mb-0" id="dataTable">
+                <thead>
                     <tr>
                         {% if user.role != 'Student' %}
                         <th class="ps-4">Student</th>
@@ -32,40 +39,95 @@
                     {% for req in requests %}
                     <tr>
                         {% if user.role != 'Student' %}
-                        <td class="ps-4 fw-semibold">{{ req.student.full_name }}</td>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="elite-avatar" style="background: var(--elite-gradient-info); width: 30px; height: 30px; font-size: 0.65rem;">
+                                    {{ req.student.full_name|make_list|first|upper }}
+                                </span>
+                                <span class="fw-semibold">{{ req.student.full_name }}</span>
+                            </div>
+                        </td>
                         {% endif %}
-                        <td class="{% if user.role == 'Student' %}ps-4{% endif %}"><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">{{ req.leave_type.name }}</span></td>
-                        <td>{{ req.start_date|date:"M d, Y" }} - {{ req.end_date|date:"M d, Y" }}</td>
-                        <td>{{ req.total_days }}</td>
+                        <td class="{% if user.role == 'Student' %}ps-4{% endif %}">
+                            <span class="elite-badge elite-badge-secondary">{{ req.leave_type.name }}</span>
+                        </td>
+                        <td class="small">{{ req.start_date|date:"M d, Y" }} – {{ req.end_date|date:"M d, Y" }}</td>
+                        <td><span class="fw-bold">{{ req.total_days }}</span></td>
                         <td>
                             {% if req.status == 'Pending' %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                            <span class="elite-badge elite-badge-warning"><span class="dot"></span> Pending</span>
                             {% elif req.status == 'Manager Approved' %}
-                                <span class="badge bg-info text-dark"><i class="bi bi-check-circle me-1"></i>L1 Approved</span>
+                            <span class="elite-badge elite-badge-info"><span class="dot"></span> L1 Approved</span>
                             {% elif req.status == 'Principal Approved' %}
-                                <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Approved</span>
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Approved</span>
                             {% else %}
-                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Rejected</span>
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> Rejected</span>
                             {% endif %}
                         </td>
-                        <td class="text-muted small">{{ req.applied_on|date:"M d, Y H:i" }}</td>
+                        <td class="small" style="color: var(--elite-text-muted);">{{ req.applied_on|date:"M d, Y H:i" }}</td>
                         <td class="text-end pe-4">
-                            {% if user.role != 'Student' and req.status == 'Pending' %}
-                            <button class="btn btn-sm btn-outline-success">Approve</button>
-                            <button class="btn btn-sm btn-outline-danger">Reject</button>
+                            {% if user.role != 'Student' %}
+                                <div class="d-flex justify-content-end gap-1 flex-wrap">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'leave:edit' req.pk %}" class="btn btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'leave:delete' req.pk %}" class="btn btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                    {% if req.status == 'Pending' or req.status == 'Manager Approved' and user.role == 'Principal' %}
+                                    <div class="btn-group btn-group-sm ms-1">
+                                        <form method="post" action="{% url 'leave:approve' req.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-success" title="Approve">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'leave:reject' req.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+                                </div>
                             {% else %}
-                            <button class="btn btn-sm btn-light"><i class="bi bi-eye"></i></button>
+                                {% if req.status == 'Manager Approved' or req.status == 'Principal Approved' %}
+                                <a href="{% url 'leave:pdf' req.pk %}" class="btn btn-sm btn-outline-danger fw-bold" title="Download PDF">
+                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF
+                                </a>
+                                {% else %}
+                                <span class="elite-badge elite-badge-secondary"><i class="bi bi-hourglass"></i> Processing</span>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">No leave requests found.</td>
-                    </tr>
+                    <tr><td colspan="7" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-envelope-x d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No leave requests found.
+                    </td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!$.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "order": [[{% if user.role != 'Student' %}5{% else %}4{% endif %}, "desc"]],
+                "info": true,
+                "lengthChange": false,
+                "language": { "search": "", "searchPlaceholder": "Search leave requests..." }
+            });
+        }
+    });
+</script>
 {% endblock %}

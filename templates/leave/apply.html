@@ -2,43 +2,52 @@
 {% block page_title %}Apply for Leave{% endblock %}
 
 {% block content %}
-<div class="card border-0 shadow-sm col-md-8 mx-auto">
-    <div class="card-body p-4 p-md-5">
-        <h4 class="fw-bold mb-4"><i class="bi bi-envelope-paper me-2 text-primary"></i> Leave Application</h4>
-        
-        <form method="post" action="{% url 'leave:apply_leave' %}">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Leave Type</label>
-                <select name="leave_type" class="form-select form-select-lg" required>
-                    <option value="">Select Type</option>
-                    {% for lt in leave_types %}
-                    <option value="{{ lt.id }}">{{ lt.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="form-label fw-semibold">Start Date</label>
-                    <input type="date" name="start_date" class="form-control form-control-lg" required>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card" style="border-top: 3px solid; border-image: var(--elite-gradient-primary) 1;">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <h4 class="fw-bold"><i class="bi bi-envelope-paper me-2 text-gradient"></i>Leave Application</h4>
+                    <p class="mb-0" style="color: var(--elite-text-muted);">Submit a new leave request for approval.</p>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">End Date</label>
-                    <input type="date" name="end_date" class="form-control form-control-lg" required>
-                </div>
+
+                <form method="post" action="{% url 'leave:apply_leave' %}">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Leave Type</label>
+                        <select name="leave_type" class="form-select form-select-lg" required>
+                            <option value="">Select Type</option>
+                            {% for lt in leave_types %}
+                            <option value="{{ lt.id }}">{{ lt.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" name="start_date" class="form-control form-control-lg" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control form-control-lg" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Reason for Leave</label>
+                        <textarea name="reason" class="form-control" rows="4" required placeholder="Provide a brief reason..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'leave:leave_list' %}" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">
+                            <i class="bi bi-send me-1"></i> Submit Request
+                        </button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Reason for Leave</label>
-                <textarea name="reason" class="form-control" rows="4" required placeholder="Provide a brief reason..."></textarea>
-            </div>
-            
-            <div class="d-flex justify-content-end">
-                <a href="{% url 'leave:leave_list' %}" class="btn btn-light me-3 px-4">Cancel</a>
-                <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Submit Request</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

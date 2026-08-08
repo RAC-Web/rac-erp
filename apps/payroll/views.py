@@ -1,10 +1,54 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
+from django.contrib import messages
 from django.http import HttpResponse
 from .models import PayrollRecord
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
+
+class ManagerRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.role in ['Manager', 'Principal']
+    def handle_no_permission(self):
+        return redirect('/')
+
+class PayrollCreateView(ManagerRequiredMixin, CreateView):
+    model = PayrollRecord
+    fields = ['student', 'month', 'base_stipend', 'conveyance_allowance', 'bonus', 'late_deduction', 'leave_deduction', 'other_deduction', 'status']
+    template_name = 'payroll/generate.html'
+    success_url = reverse_lazy('payroll:list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = 'Generate Payroll'
+        ctx['cancel_url'] = self.success_url
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(self.request, "Payroll generated successfully.")
+        return super().form_valid(form)
+
+from django.views.generic import UpdateView
+
+class PayrollUpdateView(ManagerRequiredMixin, UpdateView):
+    model = PayrollRecord
+    fields = ['base_stipend', 'conveyance_allowance', 'bonus', 'late_deduction', 'leave_deduction', 'other_deduction', 'status']
+    template_name = 'payroll/edit.html'
+    success_url = reverse_lazy('payroll:list')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['title'] = 'Edit Payroll (Manual Override)'
+        ctx['cancel_url'] = self.success_url
+        return ctx
+
+    def form_valid(self, form):
+        messages.success(self.request, "Payroll updated successfully.")
+        return super().form_valid(form)
 
 @login_required
 def payroll_list(request):
@@ -55,3 +99,28 @@ def generate_payslip_pdf(request, pk):
     response['Content-Disposition'] = f'attachment; filename="payslip_{payroll.month.strftime("%Y_%m")}.pdf"'
     
     return response
+
+from django.http import JsonResponse
+from apps.students.models import StudentProfile
+import datetime
+from .utils import calculate_payroll_deductions
+
+@login_required
+def calculate_deductions_api(request):
+    if request.user.role not in ['Manager', 'Principal']:
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+        
+    student_id = request.GET.get('student_id')
+    month_str = request.GET.get('month') # expected format YYYY-MM-01
+    
+    if not student_id or not month_str:
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+        
+    try:
+        student = StudentProfile.objects.get(id=student_id)
+        month_date = datetime.datetime.strptime(month_str, '%Y-%m-%d').date()
+    except (StudentProfile.DoesNotExist, ValueError):
+        return JsonResponse({'error': 'Invalid parameters'}, status=400)
+        
+    data = calculate_payroll_deductions(student, month_date)
+    return JsonResponse(data)

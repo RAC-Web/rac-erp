@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}Generate Payroll{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card" style="border-top: 3px solid; border-image: var(--elite-gradient-primary) 1;">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-bold"><i class="bi bi-gear-fill me-2 text-gradient"></i>Generate Payroll</h4>
+                        <p class="mb-0 text-muted">Auto-calculates deductions based on attendance & policies.</p>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-info" id="btnCalculate" disabled>
+                        <i class="bi bi-calculator"></i> Auto Calculate
+                    </button>
+                </div>
+
+                <form method="post" id="payrollForm">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.student|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.month|as_crispy_field }}
+                            <small class="text-muted d-block mt-1">Format: YYYY-MM-01</small>
+                        </div>
+                    </div>
+                    
+                    <div id="calcAlert" class="alert alert-info d-none small">
+                        <strong>Auto-Calculation Applied:</strong>
+                        <div id="calcDetails"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">{{ form.base_stipend|as_crispy_field }}</div>
+                        <div class="col-md-4 mb-3">{{ form.conveyance_allowance|as_crispy_field }}</div>
+                        <div class="col-md-4 mb-3">{{ form.bonus|as_crispy_field }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">{{ form.late_deduction|as_crispy_field }}</div>
+                        <div class="col-md-4 mb-3">{{ form.leave_deduction|as_crispy_field }}</div>
+                        <div class="col-md-4 mb-3">{{ form.other_deduction|as_crispy_field }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-4">{{ form.status|as_crispy_field }}</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ cancel_url }}" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">
+                            <i class="bi bi-save me-1"></i> Save Payroll
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const studentSelect = document.getElementById('id_student');
+    const monthInput = document.getElementById('id_month');
+    const btnCalc = document.getElementById('btnCalculate');
+    
+    // Make month field default to current month start if empty
+    if(!monthInput.value) {
+        const d = new Date();
+        monthInput.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+    }
+
+    function checkEnableCalc() {
+        if(studentSelect.value && monthInput.value) {
+            btnCalc.disabled = false;
+        } else {
+            btnCalc.disabled = true;
+        }
+    }
+
+    studentSelect.addEventListener('change', checkEnableCalc);
+    monthInput.addEventListener('input', checkEnableCalc);
+    checkEnableCalc();
+
+    btnCalc.addEventListener('click', function() {
+        const s_id = studentSelect.value;
+        const m_val = monthInput.value;
+        if(!s_id || !m_val) return;
+
+        btnCalc.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        
+        fetch(`/payroll/api/calculate/?student_id=${s_id}&month=${m_val}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    document.getElementById('id_base_stipend').value = data.base_stipend;
+                    document.getElementById('id_leave_deduction').value = data.leave_deduction;
+                    document.getElementById('id_late_deduction').value = data.late_deduction;
+                    
+                    const details = `
+                        <ul class="mb-0 ps-3">
+                            <li>Unapproved Leaves: ${data.unapproved_leave_days} days</li>
+                            <li>Sandwich Penalty: ${data.sandwich_penalty_days} days</li>
+                            <li>Late Penalty: ${data.late_penalty_days} days</li>
+                        </ul>
+                    `;
+                    document.getElementById('calcDetails').innerHTML = details;
+                    document.getElementById('calcAlert').classList.remove('d-none');
+                }
+                btnCalc.innerHTML = '<i class="bi bi-calculator"></i> Auto Calculate';
+            })
+            .catch(err => {
+                alert("Failed to fetch API");
+                btnCalc.innerHTML = '<i class="bi bi-calculator"></i> Auto Calculate';
+            });
+    });
+});
+</script>
+{% endblock %}

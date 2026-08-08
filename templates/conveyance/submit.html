@@ -1,77 +1,152 @@
 {% extends 'base.html' %}
-{% block page_title %}Submit Conveyance Bill{% endblock %}
+{% block page_title %}Submit Conveyance Claim{% endblock %}
 
 {% block content %}
-<div class="card border-0 shadow-sm col-md-8 mx-auto">
-    <div class="card-body p-4 p-md-5">
-        <h4 class="fw-bold mb-4"><i class="bi bi-car-front-fill me-2 text-primary"></i> Submit Conveyance Claim</h4>
-        
-        <form method="post" action="{% url 'conveyance:submit' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="form-label fw-semibold">Date of Travel</label>
-                    <input type="date" name="date" class="form-control" required>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card" style="border-top: 3px solid; border-image: var(--elite-gradient-info) 1;">
+            <div class="card-body p-4 p-md-5">
+                <div class="mb-4">
+                    <h4 class="fw-bold"><i class="bi bi-car-front-fill me-2 text-gradient"></i>Submit Conveyance Claim</h4>
+                    <p class="mb-0" style="color: var(--elite-text-muted);">File your daily travel expenses for multiple client visits.</p>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Client</label>
-                    <select name="client" class="form-select" required>
-                        <option value="">Select Client</option>
-                        {% for client in clients %}
-                        <option value="{{ client.id }}">{{ client.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+
+                <form method="post" action="{% url 'conveyance:submit' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label class="form-label fw-bold">Date of Travel</label>
+                            <input type="date" name="date" class="form-control form-control-lg" required>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3">Travel Details</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table align-middle" id="conveyanceTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Assignment</th>
+                                    <th>From Location</th>
+                                    <th>To Location</th>
+                                    <th>Transport Mode</th>
+                                    <th style="width:120px;">Amount (BDT)</th>
+                                    <th>Description</th>
+                                    <th style="width:50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Initial Row -->
+                                <tr>
+                                    <td>
+                                        <select name="client[]" class="form-select" required>
+                                            <option value="">Select Client</option>
+                                            {% for client in clients %}
+                                            <option value="{{ client.id }}">{{ client.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="assignment[]" class="form-select" required>
+                                            <option value="">Select Assignment</option>
+                                            {% for assignment in assignments %}
+                                            <option value="{{ assignment.id }}">{{ assignment.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="from_location[]" class="form-control" required placeholder="e.g. Office"></td>
+                                    <td><input type="text" name="to_location[]" class="form-control" required placeholder="e.g. Motijheel"></td>
+                                    <td><input type="text" name="transport[]" class="form-control" required placeholder="Bus/Uber"></td>
+                                    <td><input type="number" step="0.01" name="amount[]" class="form-control amount-input" required placeholder="0.00" onchange="calculateTotal()"></td>
+                                    <td><input type="text" name="description[]" class="form-control" placeholder="Optional"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-end fw-bold">Total:</td>
+                                    <td class="fw-bold text-success fs-5">৳ <span id="totalAmount">0.00</span></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="addRow()">
+                            <i class="bi bi-plus-circle me-1"></i> Add Another Location
+                        </button>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'conveyance:list' %}" class="btn btn-light px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">
+                            <i class="bi bi-send me-1"></i> Submit Claim
+                        </button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Assignment</label>
-                <select name="assignment" class="form-select" required>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden template row for JavaScript -->
+<table style="display:none;">
+    <tbody id="rowTemplate">
+        <tr>
+            <td>
+                <select name="client[]" class="form-select" required>
+                    <option value="">Select Client</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="assignment[]" class="form-select" required>
                     <option value="">Select Assignment</option>
                     {% for assignment in assignments %}
                     <option value="{{ assignment.id }}">{{ assignment.title }}</option>
                     {% endfor %}
                 </select>
-            </div>
-            
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="form-label fw-semibold">From Location</label>
-                    <input type="text" name="from_location" class="form-control" required placeholder="e.g. Office">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">To Location</label>
-                    <input type="text" name="to_location" class="form-control" required placeholder="e.g. Client Office">
-                </div>
-            </div>
+            </td>
+            <td><input type="text" name="from_location[]" class="form-control" required placeholder="e.g. Office"></td>
+            <td><input type="text" name="to_location[]" class="form-control" required placeholder="e.g. Motijheel"></td>
+            <td><input type="text" name="transport[]" class="form-control" required placeholder="Bus/Uber"></td>
+            <td><input type="number" step="0.01" name="amount[]" class="form-control amount-input" required placeholder="0.00" onchange="calculateTotal()"></td>
+            <td><input type="text" name="description[]" class="form-control" placeholder="Optional"></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-            <div class="row mb-4">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="form-label fw-semibold">Transport Mode</label>
-                    <input type="text" name="transport" class="form-control" required placeholder="e.g. Bus, Uber, CNG">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Amount (BDT)</label>
-                    <input type="number" step="0.01" name="amount" class="form-control" required>
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Description</label>
-                <textarea name="description" class="form-control" rows="2" placeholder="Purpose of travel..."></textarea>
-            </div>
-            
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Attachment / Receipt (Optional)</label>
-                <input type="file" name="attachment" class="form-control">
-            </div>
-            
-            <div class="d-flex justify-content-end">
-                <a href="{% url 'conveyance:list' %}" class="btn btn-light me-3 px-4">Cancel</a>
-                <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Submit Claim</button>
-            </div>
-        </form>
-    </div>
-</div>
+<script>
+function addRow() {
+    const tbody = document.querySelector('#conveyanceTable tbody');
+    const template = document.getElementById('rowTemplate').innerHTML;
+    tbody.insertAdjacentHTML('beforeend', template);
+}
+
+function removeRow(btn) {
+    const row = btn.closest('tr');
+    if(document.querySelectorAll('#conveyanceTable tbody tr').length > 1) {
+        row.remove();
+        calculateTotal();
+    } else {
+        alert("You must have at least one travel record.");
+    }
+}
+
+function calculateTotal() {
+    let total = 0;
+    document.querySelectorAll('.amount-input').forEach(input => {
+        if(input.value) {
+            total += parseFloat(input.value);
+        }
+    });
+    document.getElementById('totalAmount').textContent = total.toFixed(2);
+}
+</script>
 {% endblock %}

@@ -2,70 +2,124 @@
 {% block page_title %}Conveyance Claims{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0">Conveyance Bills</h4>
-    {% if user.role == 'Student' %}
-    <a href="{% url 'conveyance:submit' %}" class="btn btn-primary fw-bold shadow-sm">
-        <i class="bi bi-plus-lg me-1"></i> Submit Bill
-    </a>
-    {% endif %}
+<div class="page-header">
+    <h4><i class="bi bi-car-front-fill me-2 text-gradient"></i>Conveyance Register</h4>
+    <div class="d-flex gap-2">
+        {% if user.role != 'Student' %}
+        <a href="{% url 'conveyance:add' %}" class="btn btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i> Add Conveyance
+        </a>
+        {% endif %}
+        {% if user.role == 'Student' %}
+        <a href="{% url 'conveyance:submit' %}" class="btn btn-primary fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> Submit Bill
+        </a>
+        {% endif %}
+    </div>
 </div>
 
-<div class="card border-0 shadow-sm">
+<div class="card">
     <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+        <div class="table-responsive elite-table-wrap">
+            <table class="table table-hover align-middle mb-0" id="dataTable">
+                <thead>
                     <tr>
                         {% if user.role != 'Student' %}
                         <th class="ps-4">Student</th>
                         {% endif %}
                         <th class="{% if user.role == 'Student' %}ps-4{% endif %}">Date</th>
-                        <th>Client</th>
-                        <th>Route</th>
-                        <th>Transport</th>
-                        <th>Amount</th>
+                        <th>Destinations</th>
+                        <th>Total Amount</th>
                         <th>Status</th>
+                        {% if user.role != 'Student' %}
                         <th class="text-end pe-4">Actions</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for claim in conveyances %}
                     <tr>
                         {% if user.role != 'Student' %}
-                        <td class="ps-4 fw-semibold">{{ claim.student.full_name }}</td>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="elite-avatar" style="background: var(--elite-gradient-info); width: 30px; height: 30px; font-size: 0.65rem;">
+                                    {{ claim.student.full_name|make_list|first|upper }}
+                                </span>
+                                <span class="fw-semibold">{{ claim.student.full_name }}</span>
+                            </div>
+                        </td>
                         {% endif %}
                         <td class="{% if user.role == 'Student' %}ps-4{% endif %}">{{ claim.date|date:"M d, Y" }}</td>
-                        <td>{{ claim.client.name }}</td>
-                        <td class="small">{{ claim.from_location }} &rarr; {{ claim.to_location }}</td>
-                        <td><span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">{{ claim.transport }}</span></td>
-                        <td class="fw-bold text-primary">৳ {{ claim.amount }}</td>
+                        <td>
+                            <ul class="list-unstyled mb-0 small">
+                                {% for item in claim.items.all %}
+                                <li>
+                                    <span class="fw-semibold">{{ item.client.name|default:"-" }}</span>: 
+                                    {{ item.from_location }} <i class="bi bi-arrow-right"></i> {{ item.to_location }}
+                                    <span class="text-muted">({{ item.transport }})</span>
+                                </li>
+                                {% empty %}
+                                <li class="text-muted">No items</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td class="fw-bold" style="color: var(--elite-primary);">৳ {{ claim.total_amount }}</td>
                         <td>
                             {% if claim.status == 'Pending' %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                            <span class="elite-badge elite-badge-warning"><span class="dot"></span> Pending</span>
                             {% elif claim.status == 'Approved' %}
-                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Approved</span>
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Approved</span>
                             {% else %}
-                                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Rejected</span>
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> Rejected</span>
                             {% endif %}
                         </td>
+                        {% if user.role != 'Student' %}
                         <td class="text-end pe-4">
-                            {% if user.role != 'Student' and claim.status == 'Pending' %}
-                            <button class="btn btn-sm btn-outline-success">Approve</button>
-                            <button class="btn btn-sm btn-outline-danger">Reject</button>
-                            {% else %}
-                            <button class="btn btn-sm btn-light"><i class="bi bi-eye"></i></button>
-                            {% endif %}
+                            <div class="d-flex justify-content-end gap-1 flex-wrap">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'conveyance:edit' claim.pk %}" class="btn btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a href="{% url 'conveyance:delete' claim.pk %}" class="btn btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                                </div>
+                                {% if claim.status == 'Pending' %}
+                                <div class="btn-group btn-group-sm ms-1">
+                                    <form method="post" action="{% url 'conveyance:approve' claim.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-success" title="Approve"><i class="bi bi-check-lg"></i></button>
+                                    </form>
+                                    <form method="post" action="{% url 'conveyance:reject' claim.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Reject"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="8" class="text-center py-5 text-muted">No conveyance bills found.</td>
-                    </tr>
+                    <tr><td colspan="8" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-car-front d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No conveyance bills found.
+                    </td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!$.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "order": [[{% if user.role != 'Student' %}1{% else %}0{% endif %}, "desc"]],
+                "info": true,
+                "lengthChange": false,
+                "language": { "search": "", "searchPlaceholder": "Search conveyances..." }
+            });
+        }
+    });
+</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AttendancePolicy, Attendance, AttendanceLog
+from .models import AttendancePolicy, Attendance, AttendanceLog, Holiday
 
 @admin.register(AttendancePolicy)
 class AttendancePolicyAdmin(admin.ModelAdmin):
@@ -16,3 +16,8 @@ class AttendanceLogAdmin(admin.ModelAdmin):
     list_display = ('attendance', 'manager', 'old_status', 'new_status', 'changed_at')
     list_filter = ('changed_at',)
     search_fields = ('manager__username', 'attendance__student__full_name')
+
+@admin.register(Holiday)
+class HolidayAdmin(admin.ModelAdmin):
+    list_display = ('date', 'description')
+    search_fields = ('description',)
