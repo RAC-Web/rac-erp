@@ -97,8 +97,8 @@
                         {% endif %}
                     </tr>
                     {% empty %}
-                    <tr><td colspan="8" class="text-center py-5" style="color: var(--elite-text-muted);">
-                        <i class="bi bi-car-front d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                    <tr><td colspan="{% if user.role != 'Student' %}6{% else %}4{% endif %}" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-receipt d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
                         No conveyance bills found.
                     </td></tr>
                     {% endfor %}
