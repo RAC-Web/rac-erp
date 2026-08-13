@@ -1,17 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AdminUserCreationForm
 from django import forms
 from .models import User
 
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(AdminUserCreationForm):
     allow_weak_password = forms.BooleanField(
         required=False,
         label="Allow Weak Password",
         help_text="Check this to bypass password validation rules (e.g., 'password is too similar to the username')."
     )
 
-    class Meta(UserCreationForm.Meta):
+    class Meta(AdminUserCreationForm.Meta):
         model = User
         fields = ("username", "role")
 
