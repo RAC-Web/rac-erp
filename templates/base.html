@@ -26,9 +26,9 @@
     <!-- DataTables -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
-    <!-- Elite Design System -->
-    <link rel="stylesheet" href="/static/css/elite.css?v=1.1">
-    <link rel="stylesheet" href="/static/css/custom.css?v=1.3">
+    <!-- Elite Design System v3.0 -->
+    <link rel="stylesheet" href="/static/css/elite.css?v=3.0">
+    <link rel="stylesheet" href="/static/css/custom.css?v=3.0">
 
     <!-- JS Libraries (head) -->
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
@@ -50,8 +50,15 @@
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <h4 class="fw-bold mb-0">RAC HRMS</h4>
-            <small>Rahman Anis & Co.</small>
+            <div class="d-flex align-items-center gap-3">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: var(--elite-gradient-primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px var(--elite-primary-glow); flex-shrink: 0;">
+                    <i class="bi bi-buildings-fill" style="color: #fff; font-size: 1.15rem;"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0" style="font-size: 1.15rem;">RAC HRMS</h4>
+                    <small>Rahman Anis & Co.</small>
+                </div>
+            </div>
         </div>
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
@@ -129,25 +136,25 @@
                 <i class="bi bi-list fs-4"></i>
             </button>
             <h5 class="page-title mb-0 text-truncate me-2">{% block page_title %}Dashboard{% endblock %}</h5>
-            <div class="ms-auto d-flex align-items-center gap-1 gap-sm-2 flex-shrink-0">
+            <div class="ms-auto d-flex align-items-center gap-1 gap-md-2 flex-shrink-0">
                 <!-- Global Attendance Button -->
                 {% if user.role == 'Student' %}
                     {% if not attendance_today_global %}
-                    <button type="button" class="btn btn-primary btn-sm px-2 px-sm-3 fw-bold me-1 me-sm-2" data-bs-toggle="modal" data-bs-target="#globalMarkInModal" style="border-radius: var(--elite-radius-full);">
-                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-sm-inline ms-1">Mark IN</span>
+                    <button type="button" class="btn btn-primary btn-sm px-2 px-md-3 fw-bold me-1 me-md-2" data-bs-toggle="modal" data-bs-target="#globalMarkInModal" style="border-radius: var(--elite-radius-full);">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="d-none d-md-inline ms-1">Mark IN</span>
                     </button>
                     {% elif not attendance_today_global.time_out %}
-                    <form method="post" action="{% url 'attendance:mark' %}" class="m-0 me-1 me-sm-2" id="markOutForm">
+                    <form method="post" action="{% url 'attendance:mark' %}" class="m-0 me-1 me-md-2" id="markOutForm">
                         {% csrf_token %}
                         <input type="hidden" name="out_latitude" id="out_latitude">
                         <input type="hidden" name="out_longitude" id="out_longitude">
-                        <button type="button" class="btn btn-warning btn-sm px-2 px-sm-3 fw-bold" style="border-radius: var(--elite-radius-full);" onclick="handleMarkOut()">
-                            <i class="bi bi-box-arrow-right"></i> <span class="d-none d-sm-inline ms-1">Mark OUT</span>
+                        <button type="button" class="btn btn-warning btn-sm px-2 px-md-3 fw-bold" style="border-radius: var(--elite-radius-full);" onclick="handleMarkOut()">
+                            <i class="bi bi-box-arrow-right"></i> <span class="d-none d-md-inline ms-1">Mark OUT</span>
                         </button>
                     </form>
                     {% else %}
-                    <button class="btn btn-light btn-sm px-2 px-sm-3 fw-bold me-1 me-sm-2" disabled style="border-radius: var(--elite-radius-full);">
-                        <i class="bi bi-check-circle"></i> <span class="d-none d-sm-inline ms-1">Done</span>
+                    <button class="btn btn-light btn-sm px-2 px-md-3 fw-bold me-1 me-md-2" disabled style="border-radius: var(--elite-radius-full);">
+                        <i class="bi bi-check-circle"></i> <span class="d-none d-md-inline ms-1">Done</span>
                     </button>
                     {% endif %}
                 {% endif %}
@@ -189,7 +196,7 @@
                 <div class="dropdown">
                     <a class="user-dropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="user-avatar">{{ user.username|make_list|first|upper }}</span>
-                        <span class="fw-semibold d-none d-sm-inline" style="font-size: 0.875rem;">{{ user.username }}</span>
+                        <span class="fw-semibold d-none d-md-inline" style="font-size: 0.875rem;">{{ user.username }}</span>
                         <i class="bi bi-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SalaryStructure, PayrollRecord, PayrollPolicy
+from .models import SalaryStructure, PayrollRecord, PayrollPolicy, DailyPayrollLog
 
 @admin.register(SalaryStructure)
 class SalaryStructureAdmin(admin.ModelAdmin):
@@ -15,3 +15,13 @@ class PayrollRecordAdmin(admin.ModelAdmin):
 @admin.register(PayrollPolicy)
 class PayrollPolicyAdmin(admin.ModelAdmin):
     list_display = ('name', 'deduct_unapproved_leave', 'sandwich_rule_active', 'late_deduction_active')
+
+@admin.register(DailyPayrollLog)
+class DailyPayrollLogAdmin(admin.ModelAdmin):
+    list_display = ('student', 'date', 'attendance_status', 'is_working_day', 'per_day_salary', 
+                    'daily_conveyance', 'late_deduction', 'leave_deduction', 'sandwich_deduction', 'daily_net')
+    list_filter = ('attendance_status', 'is_working_day', 'date')
+    search_fields = ('student__full_name',)
+    date_hierarchy = 'date'
+    ordering = ['-date', 'student__full_name']
+

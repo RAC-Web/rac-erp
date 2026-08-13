@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block page_title %}Daily Payroll Breakdown{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h4><i class="bi bi-calendar3 me-2 text-gradient"></i>Daily Payroll Breakdown</h4>
+    <a href="{% url 'payroll:list' %}" class="btn btn-light fw-bold">
+        <i class="bi bi-arrow-left me-1"></i> Back to Payroll List
+    </a>
+</div>
+
+<!-- Student & Month Info -->
+<div class="card mb-4" style="border-top: 3px solid; border-image: var(--elite-gradient-primary) 1;">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="elite-avatar" style="background: var(--elite-gradient-success); width: 50px; height: 50px; font-size: 1rem;">
+                        {{ payroll.student.full_name|make_list|first|upper }}
+                    </span>
+                    <div>
+                        <h5 class="fw-bold mb-0">{{ payroll.student.full_name }}</h5>
+                        <small style="color: var(--elite-text-muted);">{{ payroll.student.designation }}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <h5 class="fw-bold text-gradient mb-0">{{ payroll.month|date:"F Y" }}</h5>
+                <small style="color: var(--elite-text-muted);">{{ total_days_processed }} / {{ total_days_in_month }} days processed</small>
+            </div>
+            <div class="col-md-4 text-end">
+                {% if payroll.status == 'Paid' %}
+                <span class="elite-badge elite-badge-success"><span class="dot"></span> Paid</span>
+                {% elif payroll.status == 'Generated' %}
+                <span class="elite-badge elite-badge-primary"><span class="dot"></span> Generated</span>
+                {% else %}
+                <span class="elite-badge elite-badge-secondary"><span class="dot"></span> Draft</span>
+                {% endif %}
+                <div class="mt-2">
+                    <span class="fw-bold" style="font-size: 1.3rem; color: var(--elite-emerald);">BDT {{ payroll.net_pay }}</span>
+                    <br><small style="color: var(--elite-text-muted);">Net Pay</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Stats Cards -->
+<div class="row mb-4 g-3">
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid var(--elite-emerald);">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: var(--elite-emerald);">{{ total_present }}</h4>
+                <small style="color: var(--elite-text-muted);">Present</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid #f59e0b;">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: #f59e0b;">{{ total_late }}</h4>
+                <small style="color: var(--elite-text-muted);">Late</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid #ef4444;">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: #ef4444;">{{ total_absent }}</h4>
+                <small style="color: var(--elite-text-muted);">Absent</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid #8b5cf6;">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: #8b5cf6;">{{ total_leave }}</h4>
+                <small style="color: var(--elite-text-muted);">Leave</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid #3b82f6;">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: #3b82f6;">{{ total_holiday }}</h4>
+                <small style="color: var(--elite-text-muted);">Holiday</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-4">
+        <div class="card text-center" style="border-left: 3px solid #ec4899;">
+            <div class="card-body py-3 px-2">
+                <h4 class="fw-bold mb-0" style="color: #ec4899;">{{ total_sandwich }}</h4>
+                <small style="color: var(--elite-text-muted);">Sandwich</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Daily Breakdown Table -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive elite-table-wrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Date</th>
+                        <th>Day</th>
+                        <th>Status</th>
+                        <th class="text-end">Daily Salary</th>
+                        <th class="text-end">Conveyance</th>
+                        <th class="text-end">Late Ded.</th>
+                        <th class="text-end">Leave Ded.</th>
+                        <th class="text-end">Sandwich Ded.</th>
+                        <th class="text-end pe-4 fw-bold">Daily Net</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in daily_logs %}
+                    <tr style="{% if log.attendance_status == 'Absent' %}background: rgba(239,68,68,0.05);{% elif log.attendance_status == 'Late' %}background: rgba(245,158,11,0.05);{% elif log.attendance_status == 'Sandwich' %}background: rgba(236,72,153,0.05);{% elif log.attendance_status == 'Weekend' or log.attendance_status == 'Holiday' %}background: rgba(59,130,246,0.04);{% endif %}">
+                        <td class="ps-4 fw-semibold">{{ log.date|date:"d M" }}</td>
+                        <td style="color: var(--elite-text-secondary);">{{ log.date|date:"l" }}</td>
+                        <td>
+                            {% if log.attendance_status == 'Present' %}
+                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Present</span>
+                            {% elif log.attendance_status == 'Late' %}
+                            <span class="elite-badge" style="background: rgba(245,158,11,0.12); color: #f59e0b;"><span class="dot" style="background: #f59e0b;"></span> Late</span>
+                            {% elif log.attendance_status == 'Absent' %}
+                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> Absent</span>
+                            {% elif log.attendance_status == 'Leave' %}
+                            <span class="elite-badge" style="background: rgba(139,92,246,0.12); color: #8b5cf6;"><span class="dot" style="background: #8b5cf6;"></span> Leave</span>
+                            {% elif log.attendance_status == 'Weekend' %}
+                            <span class="elite-badge elite-badge-secondary"><span class="dot"></span> Weekend</span>
+                            {% elif log.attendance_status == 'Holiday' %}
+                            <span class="elite-badge elite-badge-primary"><span class="dot"></span> Holiday</span>
+                            {% elif log.attendance_status == 'Sandwich' %}
+                            <span class="elite-badge" style="background: rgba(236,72,153,0.12); color: #ec4899;"><span class="dot" style="background: #ec4899;"></span> Sandwich</span>
+                            {% elif log.attendance_status == 'Half Day' %}
+                            <span class="elite-badge" style="background: rgba(245,158,11,0.12); color: #f59e0b;"><span class="dot" style="background: #f59e0b;"></span> Half Day</span>
+                            {% else %}
+                            <span class="elite-badge elite-badge-secondary"><span class="dot"></span> {{ log.attendance_status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end" style="color: var(--elite-emerald);">{{ log.per_day_salary }}</td>
+                        <td class="text-end" style="color: var(--elite-text-secondary);">
+                            {% if log.daily_conveyance > 0 %}{{ log.daily_conveyance }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end" style="color: {% if log.late_deduction > 0 %}#ef4444{% else %}var(--elite-text-muted){% endif %};">
+                            {% if log.late_deduction > 0 %}-{{ log.late_deduction }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end" style="color: {% if log.leave_deduction > 0 %}#ef4444{% else %}var(--elite-text-muted){% endif %};">
+                            {% if log.leave_deduction > 0 %}-{{ log.leave_deduction }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end" style="color: {% if log.sandwich_deduction > 0 %}#ec4899{% else %}var(--elite-text-muted){% endif %};">
+                            {% if log.sandwich_deduction > 0 %}-{{ log.sandwich_deduction }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end pe-4 fw-bold" style="color: {% if log.daily_net > 0 %}var(--elite-emerald){% elif log.daily_net == 0 %}var(--elite-text-muted){% else %}#ef4444{% endif %};">
+                            {{ log.daily_net }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="text-center py-5" style="color: var(--elite-text-muted);">
+                        <i class="bi bi-calendar-x d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        No daily payroll logs generated yet. Run <strong>Auto Generate</strong> to create daily entries.
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+                {% if daily_logs %}
+                <tfoot style="background: var(--elite-sidebar-bg);">
+                    <tr class="fw-bold">
+                        <td class="ps-4" colspan="3">Monthly Total</td>
+                        <td class="text-end" style="color: var(--elite-emerald);">{{ payroll.base_stipend }}</td>
+                        <td class="text-end">{{ payroll.conveyance_allowance }}</td>
+                        <td class="text-end" style="color: #ef4444;">
+                            {% if payroll.late_deduction > 0 %}-{{ payroll.late_deduction }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end" style="color: #ef4444;" colspan="2">
+                            {% if payroll.leave_deduction > 0 %}-{{ payroll.leave_deduction }}{% else %}-{% endif %}
+                        </td>
+                        <td class="text-end pe-4" style="color: var(--elite-emerald); font-size: 1.1rem;">
+                            BDT {{ payroll.net_pay }}
+                        </td>
+                    </tr>
+                </tfoot>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

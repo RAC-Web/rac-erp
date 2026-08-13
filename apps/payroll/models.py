@@ -56,3 +56,46 @@ class PayrollPolicy(models.Model):
 
     class Meta:
         verbose_name_plural = "Payroll Policies"
+
+
+class DailyPayrollLog(models.Model):
+    """Tracks daily payroll breakdown for each student - auto-generated every day."""
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='daily_payroll_logs')
+    date = models.DateField()
+    
+    # Daily amounts
+    per_day_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0, 
+                                         help_text="Base stipend / 30")
+    daily_conveyance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Daily status tracking
+    attendance_status = models.CharField(max_length=20, default='N/A',
+                                          help_text="Present/Late/Absent/Leave/Holiday/Weekend")
+    is_working_day = models.BooleanField(default=True)
+    
+    # Deductions for this day
+    late_deduction = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    leave_deduction = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    sandwich_deduction = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Net for this day
+    daily_net = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        # Auto-calculate daily net
+        earnings = self.per_day_salary + self.daily_conveyance
+        deductions = self.late_deduction + self.leave_deduction + self.sandwich_deduction
+        self.daily_net = earnings - deductions
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.student.full_name} - {self.date} ({self.attendance_status}) Net: {self.daily_net}"
+    
+    class Meta:
+        unique_together = ('student', 'date')
+        ordering = ['-date']
+        verbose_name = "Daily Payroll Log"
+        verbose_name_plural = "Daily Payroll Logs"

@@ -9,4 +9,7 @@ urlpatterns = [
     path('generate/', views.PayrollCreateView.as_view(), name='generate'),
     path('edit/<int:pk>/', views.PayrollUpdateView.as_view(), name='edit'),
     path('payslip/<int:pk>/', views.generate_payslip_pdf, name='payslip_pdf'),
+    path('daily/<int:pk>/', views.daily_detail, name='daily_detail'),
+    path('auto-generate/', views.auto_generate_payroll_view, name='auto_generate'),
 ]
+

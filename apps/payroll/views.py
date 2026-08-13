@@ -5,10 +5,12 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse
-from .models import PayrollRecord
+from .models import PayrollRecord, DailyPayrollLog
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
+import calendar
+import datetime
 
 class ManagerRequiredMixin(UserPassesTestMixin):
     def test_func(self):
@@ -124,3 +126,78 @@ def calculate_deductions_api(request):
         
     data = calculate_payroll_deductions(student, month_date)
     return JsonResponse(data)
+
+
+@login_required
+def daily_detail(request, pk):
+    """Shows day-by-day payroll breakdown for a specific PayrollRecord."""
+    payroll = get_object_or_404(PayrollRecord, pk=pk)
+    
+    # Access control
+    if getattr(request.user, 'role', '') == 'Student' and payroll.student != request.user.student_profile:
+        return HttpResponse("Unauthorized", status=403)
+    
+    # Get month date range
+    year = payroll.month.year
+    month = payroll.month.month
+    _, num_days = calendar.monthrange(year, month)
+    start_date = datetime.date(year, month, 1)
+    end_date = datetime.date(year, month, num_days)
+    
+    # Get daily logs
+    daily_logs = DailyPayrollLog.objects.filter(
+        student=payroll.student,
+        date__range=[start_date, end_date]
+    ).order_by('date')
+    
+    # Summary stats
+    total_present = daily_logs.filter(attendance_status='Present').count()
+    total_late = daily_logs.filter(attendance_status='Late').count()
+    total_absent = daily_logs.filter(attendance_status='Absent').count()
+    total_leave = daily_logs.filter(attendance_status='Leave').count()
+    total_holiday = daily_logs.filter(attendance_status__in=['Holiday', 'Weekend']).count()
+    total_sandwich = daily_logs.filter(attendance_status='Sandwich').count()
+    
+    context = {
+        'payroll': payroll,
+        'daily_logs': daily_logs,
+        'total_present': total_present,
+        'total_late': total_late,
+        'total_absent': total_absent,
+        'total_leave': total_leave,
+        'total_holiday': total_holiday,
+        'total_sandwich': total_sandwich,
+        'total_days_processed': daily_logs.count(),
+        'total_days_in_month': num_days,
+    }
+    
+    return render(request, 'payroll/daily_detail.html', context)
+
+
+@login_required
+def auto_generate_payroll_view(request):
+    """Allows managers to trigger daily payroll generation from UI."""
+    if request.user.role not in ['Manager', 'Principal']:
+        return redirect('payroll:list')
+    
+    if request.method == 'POST':
+        from django.core.management import call_command
+        from io import StringIO
+        
+        out = StringIO()
+        backfill = request.POST.get('backfill', '') == 'on'
+        target_date = request.POST.get('target_date', '')
+        
+        cmd_kwargs = {}
+        if target_date:
+            cmd_kwargs['date'] = target_date
+        if backfill:
+            cmd_kwargs['backfill'] = True
+        
+        call_command('auto_generate_payroll', stdout=out, **cmd_kwargs)
+        
+        output = out.getvalue()
+        messages.success(request, f'Daily payroll generation completed! {output}')
+        return redirect('payroll:list')
+    
+    return render(request, 'payroll/auto_generate.html')
