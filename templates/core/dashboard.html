@@ -1,562 +1,1403 @@
 {% extends 'base.html' %}
 {% block page_title %}Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ══════════════════════════════════════════════════════════
+   ULTRA-PREMIUM DASHBOARD v4.0
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Hero Welcome Banner ───────────────────────────────── */
+.dash-hero {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    background: linear-gradient(135deg, #1e0a3c 0%, #3b0f6e 30%, #5b21b6 65%, #7c3aed 100%);
+    box-shadow: 0 20px 60px -12px rgba(109, 40, 217, 0.4), 0 4px 16px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.dash-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+.dash-hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
+    opacity: 0.5;
+}
+.dash-hero-orb-1 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    top: -60%; right: 5%;
+    animation: orbFloat 12s ease-in-out infinite;
+}
+.dash-hero-orb-2 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+    bottom: -40%; left: 15%;
+    animation: orbFloat 16s ease-in-out infinite 3s;
+}
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(20px, -15px) scale(1.05); }
+    66% { transform: translate(-10px, 20px) scale(0.97); }
+}
+.dash-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.dash-hero-text h2 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.04em;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.dash-hero-text p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 500;
+}
+.dash-hero-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.dash-hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 8px 16px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.dash-hero-pill i { font-size: 0.9rem; opacity: 0.85; }
+.dash-hero-date {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 16px 24px;
+    text-align: center;
+    color: #fff;
+    flex-shrink: 0;
+}
+.dash-hero-date .hero-time {
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-family: 'Outfit', sans-serif;
+}
+.dash-hero-date .hero-date-text {
+    font-size: 0.72rem;
+    opacity: 0.65;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* ── Premium KPI Cards ─────────────────────────────────── */
+.kpi-card {
+    position: relative;
+    border-radius: 20px !important;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    display: block;
+}
+.kpi-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    text-decoration: none !important;
+}
+.kpi-card .card {
+    border: none !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Gradient KPI Cards */
+.kpi-gradient-primary .card {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(99,102,241,0.5), 0 4px 12px rgba(99,102,241,0.2) !important;
+}
+.kpi-gradient-success .card {
+    background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(16,185,129,0.5), 0 4px 12px rgba(16,185,129,0.2) !important;
+}
+.kpi-gradient-warning .card {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(245,158,11,0.5), 0 4px 12px rgba(245,158,11,0.2) !important;
+}
+.kpi-gradient-danger .card {
+    background: linear-gradient(135deg, #dc2626 0%, #f43f5e 50%, #fb7185 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(244,63,94,0.5), 0 4px 12px rgba(244,63,94,0.2) !important;
+}
+.kpi-gradient-sky .card {
+    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(14,165,233,0.5), 0 4px 12px rgba(14,165,233,0.2) !important;
+}
+.kpi-gradient-violet .card {
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(139,92,246,0.5), 0 4px 12px rgba(139,92,246,0.2) !important;
+}
+.kpi-gradient-dark .card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 80%) !important;
+    box-shadow: 0 16px 40px -8px rgba(30,41,59,0.5) !important;
+}
+.kpi-gradient-teal .card {
+    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #2dd4bf 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(20,184,166,0.5), 0 4px 12px rgba(20,184,166,0.2) !important;
+}
+.kpi-gradient-rose .card {
+    background: linear-gradient(135deg, #be185d 0%, #ec4899 50%, #f9a8d4 100%) !important;
+    box-shadow: 0 16px 40px -8px rgba(236,72,153,0.5), 0 4px 12px rgba(236,72,153,0.2) !important;
+}
+
+.kpi-card .card-body {
+    padding: 24px !important;
+    position: relative;
+}
+/* Shine sweep */
+.kpi-card .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 80%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+.kpi-card:hover .card::after { left: 130%; }
+
+/* Large decorative circle */
+.kpi-card .kpi-bg-circle {
+    position: absolute;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    right: -20px; bottom: -20px;
+    pointer-events: none;
+}
+.kpi-card .kpi-bg-circle-2 {
+    position: absolute;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    right: 30px; bottom: 30px;
+    pointer-events: none;
+}
+
+.kpi-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+}
+.kpi-value {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 4px;
+}
+.kpi-sub {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    margin: 0;
+}
+.kpi-icon-wrap {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #fff;
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.kpi-card:hover .kpi-icon-wrap {
+    transform: scale(1.15) rotate(-8deg);
+}
+
+/* ── Section Headers ───────────────────────────────────── */
+.dash-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.dash-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--elite-text);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+.dash-section-icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+/* ── Premium Data Cards ────────────────────────────────── */
+.dash-card {
+    border: 1px solid var(--elite-border) !important;
+    border-radius: 20px !important;
+    background: var(--elite-surface) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+    transition: box-shadow 0.3s ease !important;
+    overflow: hidden;
+}
+[data-bs-theme="dark"] .dash-card {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+/* ── Dark Gradient Card Header ─────────────────────────── */
+.card-header-dark {
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #1e293b 100%);
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+.card-header-dark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+}
+.card-header-dark .section-title-white {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+.card-header-dark .section-icon-glow {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #fff;
+}
+.card-header-dark .dash-view-all-white {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+}
+.card-header-dark .dash-view-all-white:hover {
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+}
+/* Colored orb in header */
+.card-header-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Card header stat pills ────────────────────────────── */
+.header-stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    position: relative;
+    z-index: 1;
+}
+
+.dash-card .card-header-premium {
+    padding: 18px 24px !important;
+    border-bottom: 1px solid var(--elite-border) !important;
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.dash-card .card-body-premium {
+    padding: 0;
+}
+
+/* ── Table Enhancements ────────────────────────────────── */
+.dash-table {
+    width: 100%;
+    margin: 0;
+}
+.dash-table thead th {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--elite-text-muted);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--elite-border);
+    background: transparent;
+    white-space: nowrap;
+}
+.dash-table tbody td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--elite-border);
+    font-size: 0.875rem;
+    color: var(--elite-text);
+    vertical-align: middle;
+}
+.dash-table tbody tr:last-child td { border-bottom: none; }
+.dash-table tbody tr {
+    transition: background 0.2s ease;
+}
+.dash-table tbody tr:hover td {
+    background: var(--elite-primary-subtle);
+}
+
+/* ── Avatar ────────────────────────────────────────────── */
+.dash-avatar {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: var(--elite-gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+}
+
+/* ── Status Badges ─────────────────────────────────────── */
+.dash-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+.dash-badge::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+}
+.dash-badge-success { background: rgba(16,185,129,0.1); color: #10b981; }
+.dash-badge-warning { background: rgba(245,158,11,0.1); color: #f59e0b; }
+.dash-badge-danger  { background: rgba(244,63,94,0.1); color: #f43f5e; }
+.dash-badge-info    { background: rgba(14,165,233,0.1); color: #0ea5e9; }
+.dash-badge-muted   { background: var(--elite-surface-elevated); color: var(--elite-text-muted); }
+
+/* ── View All Link ─────────────────────────────────────── */
+.dash-view-all {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--elite-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.dash-view-all:hover {
+    background: var(--elite-primary-subtle);
+    color: var(--elite-primary-hover);
+}
+
+/* ── Quick Action Cards ────────────────────────────────── */
+.quick-action-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1.5px solid var(--elite-border);
+    background: var(--elite-surface-solid);
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+.quick-action-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.quick-action-card:hover {
+    transform: translateX(6px);
+    border-color: var(--elite-border-hover);
+    box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+}
+.quick-action-card:hover::before { opacity: 1; }
+.quick-action-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.quick-action-card:hover .quick-action-icon {
+    transform: scale(1.15) rotate(-6deg);
+}
+.quick-action-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--elite-text);
+    margin-bottom: 2px;
+}
+.quick-action-desc {
+    font-size: 0.75rem;
+    color: var(--elite-text-muted);
+    margin: 0;
+    font-weight: 500;
+}
+.quick-action-arrow {
+    margin-left: auto;
+    color: var(--elite-text-muted);
+    font-size: 1rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+    flex-shrink: 0;
+}
+.quick-action-card:hover .quick-action-arrow {
+    transform: translateX(4px);
+    color: var(--elite-primary);
+}
+
+/* ── Premium Clock Card ────────────────────────────────── */
+.clock-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px -10px rgba(15,23,42,0.5) !important;
+}
+.clock-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(99,102,241,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139,92,246,0.12) 0%, transparent 50%);
+    pointer-events: none;
+}
+.clock-card-body {
+    padding: 36px 24px !important;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+.premium-clock {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.premium-clock-date {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+.attendance-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: 1.5px solid;
+}
+.attendance-status-badge.not-marked {
+    background: rgba(244,63,94,0.15);
+    border-color: rgba(244,63,94,0.3);
+    color: #fb7185;
+}
+.attendance-status-badge.working {
+    background: rgba(245,158,11,0.15);
+    border-color: rgba(245,158,11,0.3);
+    color: #fbbf24;
+}
+.attendance-status-badge.done {
+    background: rgba(16,185,129,0.15);
+    border-color: rgba(16,185,129,0.3);
+    color: #34d399;
+}
+.attendance-hint {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.74rem;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* ── Chart Cards ───────────────────────────────────────── */
+.chart-card {
+    border: 1px solid var(--elite-border) !important;
+    border-radius: 20px !important;
+    background: var(--elite-surface) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.05) !important;
+    overflow: hidden;
+}
+
+/* ── Empty State ───────────────────────────────────────── */
+.dash-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--elite-text-muted);
+}
+.dash-empty i {
+    font-size: 2.5rem;
+    opacity: 0.2;
+    display: block;
+    margin-bottom: 12px;
+}
+.dash-empty p {
+    font-size: 0.85rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ── Stagger Animations ────────────────────────────────── */
+.dash-anim { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.dash-anim-1 { animation-delay: 0.05s; }
+.dash-anim-2 { animation-delay: 0.10s; }
+.dash-anim-3 { animation-delay: 0.15s; }
+.dash-anim-4 { animation-delay: 0.20s; }
+.dash-anim-5 { animation-delay: 0.25s; }
+.dash-anim-6 { animation-delay: 0.30s; }
+.dash-anim-7 { animation-delay: 0.35s; }
+.dash-anim-8 { animation-delay: 0.40s; }
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .dash-hero { padding: 24px 20px; }
+    .dash-hero-text h2 { font-size: 1.4rem; }
+    .dash-hero-date { display: none; }
+    .kpi-value { font-size: 1.8rem; }
+    .premium-clock { font-size: 2.2rem; }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 {% if user.role == 'Principal' or user.role == 'Manager' %}
-<!-- ═══════════════════════════════════════════════════════
-     PRINCIPAL / MANAGER DASHBOARD
-     ═══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     PRINCIPAL / MANAGER ULTRA-PREMIUM DASHBOARD
+     ════════════════════════════════════════════════════════ -->
 
-<!-- Welcome Banner -->
-<div class="welcome-banner stagger-1">
-    <h3>
-        {% now "H" as current_hour %}
-        {% if current_hour|add:"0" < 12 %}Good Morning{% elif current_hour|add:"0" < 17 %}Good Afternoon{% else %}Good Evening{% endif %}, {{ user.first_name|default:user.username }} 👋
-    </h3>
-    <p>Here's what's happening at Rahman Anis & Co. today.</p>
-</div>
-
-<!-- Row 1: Primary KPI Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'students:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-primary h-100 stagger-1">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Total Students</span>
-                        <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
-                            <i class="bi bi-people-fill"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value">{{ total_students|default:"0" }}</div>
+<!-- Hero Welcome Banner -->
+<div class="dash-hero dash-anim dash-anim-1">
+    <div class="dash-hero-orb dash-hero-orb-1"></div>
+    <div class="dash-hero-orb dash-hero-orb-2"></div>
+    <div class="dash-hero-content">
+        <div class="dash-hero-text">
+            <h2>
+                {% now "H" as current_hour %}
+                {% if current_hour|add:"0" < 12 %}🌅 Good Morning{% elif current_hour|add:"0" < 17 %}☀️ Good Afternoon{% else %}🌙 Good Evening{% endif %}, {{ user.first_name|default:user.username }}!
+            </h2>
+            <p>Here's what's happening at <strong style="color:rgba(255,255,255,0.9);">Rahman Anis &amp; Co.</strong> today.</p>
+            <div class="dash-hero-stats mt-3">
+                <div class="dash-hero-pill">
+                    <i class="bi bi-people-fill"></i>
+                    {{ total_students|default:"0" }} Students
+                </div>
+                <div class="dash-hero-pill">
+                    <i class="bi bi-check-circle-fill" style="color:#6ee7b7;"></i>
+                    {{ present_today|default:"0" }} Present
+                </div>
+                <div class="dash-hero-pill">
+                    <i class="bi bi-hourglass-split" style="color:#fde68a;"></i>
+                    {{ pending_leaves|default:"0" }} Pending
                 </div>
             </div>
-        </a>
-    </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-success h-100 stagger-2">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Present Today</span>
-                        <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald);">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value" style="color: var(--elite-emerald);">{{ present_today|default:"0" }}</div>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'leave:leave_list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-warning h-100 stagger-3">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Pending Leaves</span>
-                        <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber);">
-                            <i class="bi bi-hourglass-split"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value" style="color: var(--elite-amber);">{{ pending_leaves|default:"0" }}</div>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'practice:assignment_list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-info h-100 stagger-4">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Active Assignments</span>
-                        <span class="stat-icon" style="background: rgba(14,165,233,0.1); color: var(--elite-sky);">
-                            <i class="bi bi-briefcase-fill"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value" style="color: var(--elite-sky);">{{ active_assignments|default:"0" }}</div>
-                </div>
-            </div>
-        </a>
+        </div>
+        <div class="dash-hero-date">
+            <div class="hero-time" id="heroClockAdmin"></div>
+            <div class="hero-date-text" id="heroDateAdmin"></div>
+        </div>
     </div>
 </div>
 
-<!-- Row 2: Secondary KPI Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-danger h-100 stagger-5">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Absent Today</span>
-                        <span class="stat-icon" style="background: rgba(244,63,94,0.1); color: var(--elite-rose);">
-                            <i class="bi bi-x-circle-fill"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value" style="color: var(--elite-rose);">{{ absent_today|default:"0" }}</div>
+<!-- KPI Grid: All 8 cards unified in 4×2 layout -->
+<div class="row g-3 mb-4">
+
+    <!-- 1. Total Students -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-2">
+        <a href="{% url 'students:list' %}" class="kpi-card kpi-gradient-primary h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Total Students</div><div class="kpi-value">{{ total_students|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-people-fill"></i></div>
                 </div>
-            </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>View all students</p>
+            </div></div>
         </a>
     </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'conveyance:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-dark h-100 stagger-6">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Pending Bills</span>
-                        <span class="stat-icon" style="background: var(--elite-surface-elevated); color: var(--elite-text-secondary);">
-                            <i class="bi bi-receipt-cutoff"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value">{{ pending_conveyances|default:"0" }}</div>
+
+    <!-- 2. Present Today -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-3">
+        <a href="{% url 'attendance:list' %}" class="kpi-card kpi-gradient-success h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Present Today</div><div class="kpi-value">{{ present_today|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-check-circle-fill"></i></div>
                 </div>
-            </div>
+                <p class="kpi-sub"><i class="bi bi-activity me-1"></i>Live attendance</p>
+            </div></div>
         </a>
     </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'practice:client_list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-primary h-100 stagger-7">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Active Clients</span>
-                        <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
-                            <i class="bi bi-building"></i>
-                        </span>
-                    </div>
-                    <div class="stat-value">{{ active_clients|default:"0" }}</div>
+
+    <!-- 3. Pending Leaves -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-4">
+        <a href="{% url 'leave:leave_list' %}" class="kpi-card kpi-gradient-warning h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Pending Leaves</div><div class="kpi-value">{{ pending_leaves|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-hourglass-split"></i></div>
                 </div>
-            </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>Review requests</p>
+            </div></div>
         </a>
     </div>
+
+    <!-- 4. Active Assignments -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-5">
+        <a href="{% url 'practice:assignment_list' %}" class="kpi-card kpi-gradient-sky h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Active Assignments</div><div class="kpi-value">{{ active_assignments|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-briefcase-fill"></i></div>
+                </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>Manage work</p>
+            </div></div>
+        </a>
+    </div>
+
+    <!-- 5. Absent Today -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-3">
+        <a href="{% url 'attendance:list' %}" class="kpi-card kpi-gradient-danger h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Absent Today</div><div class="kpi-value">{{ absent_today|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-x-circle-fill"></i></div>
+                </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>View absentees</p>
+            </div></div>
+        </a>
+    </div>
+
+    <!-- 6. Pending Bills — teal/cyan instead of dark -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-4">
+        <a href="{% url 'conveyance:list' %}" class="kpi-card kpi-gradient-teal h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Pending Bills</div><div class="kpi-value">{{ pending_conveyances|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-receipt-cutoff"></i></div>
+                </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>Review bills</p>
+            </div></div>
+        </a>
+    </div>
+
+    <!-- 7. Active Clients -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-5">
+        <a href="{% url 'practice:client_list' %}" class="kpi-card kpi-gradient-violet h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Active Clients</div><div class="kpi-value">{{ active_clients|default:"0" }}</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-building"></i></div>
+                </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>Client portal</p>
+            </div></div>
+        </a>
+    </div>
+
+    <!-- 8. Payroll — rose/pink gradient, proper CTA -->
+    <div class="col-6 col-lg-3 dash-anim dash-anim-6">
+        <a href="{% url 'payroll:list' %}" class="kpi-card kpi-gradient-rose h-100">
+            <div class="card"><div class="card-body">
+                <div class="kpi-bg-circle"></div><div class="kpi-bg-circle-2"></div>
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div><div class="kpi-label">Payroll</div><div class="kpi-value">৳</div></div>
+                    <div class="kpi-icon-wrap"><i class="bi bi-cash-coin"></i></div>
+                </div>
+                <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>Manage payroll</p>
+            </div></div>
+        </a>
+    </div>
+
 </div>
 
-<!-- Recent Activity Tables -->
+<!-- ── Row 3: Today's Attendance + Recent Leaves ─────────── -->
 <div class="row g-4 mb-4">
-    <div class="col-lg-7">
-        <div class="card stagger-5">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-gradient"></i>Today's Attendance</h6>
-                    <a href="{% url 'attendance:list' %}" class="btn btn-sm btn-light">View All</a>
-                </div>
+
+    <!-- Today's Attendance ─ dark header card -->
+    <div class="col-lg-7 dash-anim dash-anim-5">
+        <div class="card dash-card h-100" style="border-radius:20px!important; overflow:hidden;">
+
+            <!-- Dark gradient header -->
+            <div class="card-header-dark">
+                <div class="card-header-orb" style="width:180px;height:180px;background:radial-gradient(circle,#6366f1 0%,transparent 70%);top:-60%;left:-5%;opacity:0.5;"></div>
+                <div class="card-header-orb" style="width:120px;height:120px;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);bottom:-40%;right:10%;opacity:0.4;"></div>
+                <h6 class="section-title-white">
+                    <span class="section-icon-glow"><i class="bi bi-clock-history"></i></span>
+                    Today's Attendance
+                    <span class="header-stat-pill ms-1"><i class="bi bi-dot" style="font-size:1.1rem;"></i>Live</span>
+                </h6>
+                <a href="{% url 'attendance:list' %}" class="dash-view-all-white">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive elite-table-wrap">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th class="ps-4">Student</th>
-                                <th>Time IN</th>
-                                <th>Status</th>
-                                <th>Location</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for att in recent_attendance %}
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="elite-avatar" style="background: var(--elite-gradient-primary); width: 32px; height: 32px; font-size: 0.7rem;">
-                                            {{ att.student.full_name|make_list|first|upper }}
-                                        </span>
-                                        <span class="fw-semibold">{{ att.student.full_name }}</span>
+
+            <!-- Table -->
+            <div style="padding:0;">
+                <table class="table mb-0" style="width:100%;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--elite-border);">
+                            <th style="padding:12px 20px 12px 24px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--elite-text-muted); background:transparent; white-space:nowrap;">Student</th>
+                            <th style="padding:12px 16px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--elite-text-muted); background:transparent;">Time IN</th>
+                            <th style="padding:12px 16px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--elite-text-muted); background:transparent;">Status</th>
+                            <th style="padding:12px 16px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--elite-text-muted); background:transparent;">Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for att in recent_attendance %}
+                        <tr style="border-bottom:1px solid var(--elite-border); transition: background 0.2s ease;" onmouseover="this.style.background='var(--elite-primary-subtle)'" onmouseout="this.style.background=''">
+                            <td style="padding:14px 20px 14px 24px; vertical-align:middle;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width:36px;height:36px;border-radius:12px;background:var(--elite-gradient-primary);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,0.3);">
+                                        {{ att.student.full_name|make_list|first|upper }}
                                     </div>
-                                </td>
-                                <td>{{ att.time_in|time:"h:i A" }}</td>
-                                <td>
-                                    {% if att.status == 'Present' %}
-                                    <span class="elite-badge elite-badge-success"><span class="dot"></span> Present</span>
-                                    {% elif att.status == 'Late' %}
-                                    <span class="elite-badge elite-badge-warning"><span class="dot"></span> Late</span>
-                                    {% else %}
-                                    <span class="elite-badge elite-badge-secondary">{{ att.status }}</span>
-                                    {% endif %}
-                                </td>
-                                <td class="small" style="color: var(--elite-text-muted);">{{ att.location }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="4" class="text-center py-5" style="color: var(--elite-text-muted);">
-                                <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
-                                No records yet today.
-                            </td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                                    <span style="font-weight:600; font-size:0.875rem; color:var(--elite-text);">{{ att.student.full_name }}</span>
+                                </div>
+                            </td>
+                            <td style="padding:14px 16px; vertical-align:middle; font-size:0.875rem; font-weight:700; color:var(--elite-text); font-variant-numeric:tabular-nums;">{{ att.time_in|time:"h:i A" }}</td>
+                            <td style="padding:14px 16px; vertical-align:middle;">
+                                {% if att.status == 'Present' %}
+                                <span class="dash-badge dash-badge-success">Present</span>
+                                {% elif att.status == 'Late' %}
+                                <span class="dash-badge dash-badge-warning">Late</span>
+                                {% else %}
+                                <span class="dash-badge dash-badge-muted">{{ att.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding:14px 16px; vertical-align:middle; font-size:0.78rem; color:var(--elite-text-muted); font-weight:500;">{{ att.location }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4">
+                            <div style="text-align:center; padding:48px 20px; color:var(--elite-text-muted);">
+                                <div style="width:56px;height:56px;border-radius:16px;background:var(--elite-primary-subtle);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                                    <i class="bi bi-calendar-x" style="font-size:1.5rem;color:var(--elite-primary);opacity:0.5;"></i>
+                                </div>
+                                <p style="font-size:0.875rem;font-weight:600;margin:0 0 4px;">No records for today</p>
+                                <p style="font-size:0.78rem;margin:0;opacity:0.6;">Attendance will appear here once marked.</p>
+                            </div>
+                        </td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
-        <div class="card stagger-6">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-envelope-paper me-2 text-gradient"></i>Recent Leaves</h6>
-                    <a href="{% url 'leave:leave_list' %}" class="btn btn-sm btn-light">View All</a>
-                </div>
+
+    <!-- Recent Leaves ─ dark header card -->
+    <div class="col-lg-5 dash-anim dash-anim-6">
+        <div class="card dash-card h-100" style="border-radius:20px!important; overflow:hidden;">
+
+            <!-- Dark gradient header -->
+            <div class="card-header-dark">
+                <div class="card-header-orb" style="width:150px;height:150px;background:radial-gradient(circle,#f59e0b 0%,transparent 70%);top:-50%;right:5%;opacity:0.45;"></div>
+                <h6 class="section-title-white">
+                    <span class="section-icon-glow"><i class="bi bi-envelope-paper-fill"></i></span>
+                    Recent Leaves
+                </h6>
+                <a href="{% url 'leave:leave_list' %}" class="dash-view-all-white">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
-                    {% for req in recent_leaves %}
-                    <div class="list-group-item border-0 px-4 py-3" style="background: transparent;">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <span class="elite-avatar" style="background: var(--elite-gradient-info); width: 28px; height: 28px; font-size: 0.6rem;">
-                                        {{ req.student.full_name|make_list|first|upper }}
-                                    </span>
-                                    <span class="fw-semibold" style="font-size: 0.9rem;">{{ req.student.full_name }}</span>
-                                </div>
-                                <p class="mb-0 small" style="color: var(--elite-text-muted); padding-left: 36px;">
-                                    {{ req.leave_type.name }} &middot; {{ req.start_date|date:"M d" }} – {{ req.end_date|date:"M d" }}
-                                </p>
+
+            <!-- Leave items with colored left border -->
+            <div>
+                {% for req in recent_leaves %}
+                <div style="padding:16px 20px; border-bottom:1px solid var(--elite-border);
+                    border-left:3px solid {% if req.status == 'Pending' %}#f59e0b{% elif req.status == 'Principal Approved' %}#10b981{% elif req.status == 'Manager Approved' %}#0ea5e9{% else %}#f43f5e{% endif %};
+                    background:{% if req.status == 'Pending' %}rgba(245,158,11,0.04){% elif req.status == 'Principal Approved' %}rgba(16,185,129,0.04){% elif req.status == 'Manager Approved' %}rgba(14,165,233,0.04){% else %}rgba(244,63,94,0.04){% endif %};
+                    transition:background 0.2s ease;">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:38px;height:38px;border-radius:12px;background:var(--elite-gradient-info);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 4px 10px rgba(14,165,233,0.3);">
+                                {{ req.student.full_name|make_list|first|upper }}
                             </div>
-                            {% if req.status == 'Pending' %}
-                            <span class="elite-badge elite-badge-warning"><span class="dot"></span> Pending</span>
-                            {% elif req.status == 'Principal Approved' %}
-                            <span class="elite-badge elite-badge-success"><span class="dot"></span> Approved</span>
-                            {% elif req.status == 'Manager Approved' %}
-                            <span class="elite-badge elite-badge-info"><span class="dot"></span> L1</span>
-                            {% else %}
-                            <span class="elite-badge elite-badge-danger"><span class="dot"></span> {{ req.status }}</span>
-                            {% endif %}
+                            <div>
+                                <div style="font-weight:700; font-size:0.875rem; color:var(--elite-text); line-height:1.2;">{{ req.student.full_name }}</div>
+                                <div style="font-size:0.72rem; color:var(--elite-text-muted); margin-top:3px; display:flex; align-items:center; gap:4px;">
+                                    <span style="background:var(--elite-surface-elevated);border-radius:4px;padding:1px 6px;font-weight:600;">{{ req.leave_type.name }}</span>
+                                    <span>{{ req.start_date|date:"M d" }} – {{ req.end_date|date:"M d" }}</span>
+                                </div>
+                            </div>
                         </div>
+                        {% if req.status == 'Pending' %}
+                        <span class="dash-badge dash-badge-warning" style="flex-shrink:0;">Pending</span>
+                        {% elif req.status == 'Principal Approved' %}
+                        <span class="dash-badge dash-badge-success" style="flex-shrink:0;">Approved</span>
+                        {% elif req.status == 'Manager Approved' %}
+                        <span class="dash-badge dash-badge-info" style="flex-shrink:0;">L1 ✓</span>
+                        {% else %}
+                        <span class="dash-badge dash-badge-danger" style="flex-shrink:0;">{{ req.status }}</span>
+                        {% endif %}
                     </div>
-                    {% empty %}
-                    <div class="text-center py-5" style="color: var(--elite-text-muted);">
-                        <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
-                        No recent requests.
-                    </div>
-                    {% endfor %}
                 </div>
+                {% empty %}
+                <div style="text-align:center; padding:48px 20px; color:var(--elite-text-muted);">
+                    <div style="width:56px;height:56px;border-radius:16px;background:rgba(245,158,11,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                        <i class="bi bi-envelope-check" style="font-size:1.5rem;color:var(--elite-amber);opacity:0.6;"></i>
+                    </div>
+                    <p style="font-size:0.875rem;font-weight:600;margin:0 0 4px;">All clear!</p>
+                    <p style="font-size:0.78rem;margin:0;opacity:0.6;">No recent leave requests.</p>
+                </div>
+                {% endfor %}
+
             </div>
         </div>
     </div>
 </div>
 
-<!-- Charts Section -->
-<div class="row g-4">
-    <div class="col-lg-7">
-        <div class="card stagger-7 h-100">
-            <div class="card-header">
-                <h6 class="fw-bold mb-0"><i class="bi bi-graph-up me-2 text-gradient"></i>Attendance Trend (Last 7 Days)</h6>
+<!-- ── Row 4: Charts ─────────────────────────────────────── -->
+<div class="row g-4 mb-4">
+
+    <!-- Attendance Trend Chart ─ dark header -->
+    <div class="col-lg-7 dash-anim dash-anim-7">
+        <div class="card dash-card h-100" style="border-radius:20px!important; overflow:hidden;">
+            <div class="card-header-dark">
+                <div class="card-header-orb" style="width:200px;height:200px;background:radial-gradient(circle,#6366f1 0%,transparent 70%);top:-70%;right:-5%;opacity:0.4;"></div>
+                <div class="card-header-orb" style="width:100px;height:100px;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);bottom:-60%;left:10%;opacity:0.3;"></div>
+                <h6 class="section-title-white">
+                    <span class="section-icon-glow"><i class="bi bi-graph-up-arrow"></i></span>
+                    Attendance Trend
+                    <span class="header-stat-pill" style="font-weight:500;opacity:0.8;">Last 7 Days</span>
+                </h6>
+                <div class="d-flex align-items-center gap-2" style="position:relative;z-index:1;">
+                    <span class="header-stat-pill"><span style="width:7px;height:7px;border-radius:50%;background:#6366f1;display:inline-block;"></span> Present</span>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <canvas id="attendanceTrendChart" height="100"></canvas>
+            <div style="padding:24px;">
+                <canvas id="attendanceTrendChart" height="115"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
-        <div class="card stagger-8 h-100">
-            <div class="card-header">
-                <h6 class="fw-bold mb-0"><i class="bi bi-pie-chart me-2 text-gradient"></i>Leave Distribution</h6>
+
+    <!-- Leave Distribution Chart ─ dark header -->
+    <div class="col-lg-5 dash-anim dash-anim-8">
+        <div class="card dash-card h-100" style="border-radius:20px!important; overflow:hidden;">
+            <div class="card-header-dark">
+                <div class="card-header-orb" style="width:150px;height:150px;background:radial-gradient(circle,#8b5cf6 0%,transparent 70%);top:-50%;right:0%;opacity:0.5;"></div>
+                <h6 class="section-title-white">
+                    <span class="section-icon-glow"><i class="bi bi-pie-chart-fill"></i></span>
+                    Leave Distribution
+                </h6>
+                <span class="header-stat-pill" style="position:relative;z-index:1;">
+                    <i class="bi bi-calendar3" style="font-size:0.8rem;"></i> This Month
+                </span>
             </div>
-            <div class="card-body p-4 d-flex justify-content-center align-items-center">
-                <canvas id="leaveStatusChart" height="220"></canvas>
+            <div style="padding:20px 24px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <canvas id="leaveStatusChart" style="max-height:220px;"></canvas>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-        const gridColor = isDark ? 'rgba(63,63,70,0.3)' : 'rgba(148,163,184,0.12)';
-        const textColor = isDark ? '#a1a1aa' : '#64748b';
+document.addEventListener("DOMContentLoaded", function() {
+    const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(63,63,70,0.3)' : 'rgba(148,163,184,0.10)';
+    const textColor = isDark ? '#a1a1aa' : '#64748b';
 
-        // Attendance Trend — Gradient Area Chart
-        const attCtx = document.getElementById('attendanceTrendChart');
-        if (attCtx) {
-            const ctx = attCtx.getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-            gradient.addColorStop(0, 'rgba(99,102,241,0.2)');
-            gradient.addColorStop(1, 'rgba(99,102,241,0)');
+    // Attendance Trend — Premium Gradient Area Chart
+    const attCtx = document.getElementById('attendanceTrendChart');
+    if (attCtx) {
+        const ctx = attCtx.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 260);
+        grad.addColorStop(0, 'rgba(99,102,241,0.25)');
+        grad.addColorStop(0.7, 'rgba(99,102,241,0.05)');
+        grad.addColorStop(1, 'rgba(99,102,241,0)');
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: {{ attendance_trend_labels|safe }},
-                    datasets: [{
-                        label: 'Students Present',
-                        data: {{ attendance_trend_data|safe }},
-                        borderColor: '#6366f1',
-                        backgroundColor: gradient,
-                        borderWidth: 2.5,
-                        fill: true,
-                        tension: 0.45,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#6366f1',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 7
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: isDark ? '#27272a' : '#fff',
-                            titleColor: isDark ? '#fafafa' : '#0f172a',
-                            bodyColor: isDark ? '#a1a1aa' : '#64748b',
-                            borderColor: isDark ? 'rgba(63,63,70,0.5)' : 'rgba(148,163,184,0.2)',
-                            borderWidth: 1,
-                            padding: 12,
-                            cornerRadius: 10,
-                            displayColors: false
-                        }
-                    },
-                    scales: {
-                        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
-                        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        // Leave Status — Doughnut Chart
-        const leaveCtx = document.getElementById('leaveStatusChart');
-        if (leaveCtx) {
-            const leaveLabels = {{ leave_chart_labels|safe }};
-            const leaveData = {{ leave_chart_data|safe }};
-            const bgColors = leaveLabels.map(label => {
-                if(label === 'Pending') return '#f59e0b';
-                if(label.includes('Approved')) return '#10b981';
-                return '#f43f5e';
-            });
-
-            new Chart(leaveCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: leaveLabels,
-                    datasets: [{
-                        data: leaveData,
-                        backgroundColor: bgColors,
-                        borderWidth: 0,
-                        borderRadius: 4,
-                        spacing: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: '72%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: textColor, padding: 16, usePointStyle: true, pointStyleWidth: 8, font: { size: 12 } }
-                        },
-                        tooltip: {
-                            backgroundColor: isDark ? '#27272a' : '#fff',
-                            titleColor: isDark ? '#fafafa' : '#0f172a',
-                            bodyColor: isDark ? '#a1a1aa' : '#64748b',
-                            borderColor: isDark ? 'rgba(63,63,70,0.5)' : 'rgba(148,163,184,0.2)',
-                            borderWidth: 1,
-                            padding: 12,
-                            cornerRadius: 10
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ attendance_trend_labels|safe }},
+                datasets: [{
+                    label: 'Students Present',
+                    data: {{ attendance_trend_data|safe }},
+                    borderColor: '#6366f1',
+                    backgroundColor: grad,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.45,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: isDark ? '#111117' : '#fff',
+                    pointBorderWidth: 3,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#6366f1',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: { duration: 1200, easing: 'easeInOutQuart' },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: isDark ? '#1a1a2e' : '#fff',
+                        titleColor: isDark ? '#f0f0f5' : '#0f172a',
+                        bodyColor: isDark ? '#a1a1aa' : '#64748b',
+                        borderColor: isDark ? 'rgba(99,102,241,0.3)' : 'rgba(99,102,241,0.2)',
+                        borderWidth: 1,
+                        padding: 14,
+                        cornerRadius: 12,
+                        displayColors: false,
+                        callbacks: {
+                            title: (items) => items[0].label,
+                            label: (item) => `  ${item.raw} students present`
                         }
                     }
+                },
+                scales: {
+                    x: { grid: { color: gridColor, drawBorder: false }, ticks: { color: textColor, font: { size: 11, weight: '600' }, padding: 8 } },
+                    y: { grid: { color: gridColor, drawBorder: false }, ticks: { color: textColor, font: { size: 11 }, padding: 8 }, beginAtZero: true }
                 }
-            });
-        }
-    });
+            }
+        });
+    }
+
+    // Leave Status — Premium Doughnut
+    const leaveCtx = document.getElementById('leaveStatusChart');
+    if (leaveCtx) {
+        const leaveLabels = {{ leave_chart_labels|safe }};
+        const leaveData   = {{ leave_chart_data|safe }};
+        const bgColors = leaveLabels.map(l => {
+            if (l === 'Pending') return '#f59e0b';
+            if (l.includes('Approved')) return '#10b981';
+            return '#f43f5e';
+        });
+        new Chart(leaveCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: leaveLabels,
+                datasets: [{ data: leaveData, backgroundColor: bgColors, borderWidth: 0, borderRadius: 6, spacing: 3 }]
+            },
+            options: {
+                responsive: true, cutout: '74%',
+                animation: { animateRotate: true, duration: 1200 },
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: textColor, padding: 18, usePointStyle: true, pointStyleWidth: 8, font: { size: 12, weight: '600' } } },
+                    tooltip: {
+                        backgroundColor: isDark ? '#1a1a2e' : '#fff',
+                        titleColor: isDark ? '#f0f0f5' : '#0f172a',
+                        bodyColor: isDark ? '#a1a1aa' : '#64748b',
+                        borderColor: isDark ? 'rgba(63,63,70,0.5)' : 'rgba(148,163,184,0.2)',
+                        borderWidth: 1, padding: 14, cornerRadius: 12
+                    }
+                }
+            }
+        });
+    }
+});
 </script>
 
-{% elif user.role == 'Student' %}
-<!-- ═══════════════════════════════════════════════════════
-     STUDENT DASHBOARD
-     ═══════════════════════════════════════════════════════ -->
 
-<!-- Welcome Banner -->
-<div class="welcome-banner stagger-1">
-    <h3>
-        {% now "H" as current_hour %}
-        {% if current_hour|add:"0" < 12 %}Good Morning{% elif current_hour|add:"0" < 17 %}Good Afternoon{% else %}Good Evening{% endif %}, {{ user.first_name|default:user.username }} 👋
-    </h3>
-    <p>Your daily overview and attendance tracker.</p>
+{% elif user.role == 'Student' %}
+<!-- ════════════════════════════════════════════════════════
+     STUDENT ULTRA-PREMIUM DASHBOARD
+     ════════════════════════════════════════════════════════ -->
+
+<!-- Hero Welcome Banner -->
+<div class="dash-hero dash-anim dash-anim-1">
+    <div class="dash-hero-orb dash-hero-orb-1"></div>
+    <div class="dash-hero-orb dash-hero-orb-2"></div>
+    <div class="dash-hero-content">
+        <div class="dash-hero-text">
+            <h2>
+                {% now "H" as current_hour %}
+                {% if current_hour|add:"0" < 12 %}🌅 Good Morning{% elif current_hour|add:"0" < 17 %}☀️ Good Afternoon{% else %}🌙 Good Evening{% endif %}, {{ user.first_name|default:user.username }}!
+            </h2>
+            <p>Your personal attendance tracker &amp; daily overview.</p>
+            <div class="dash-hero-stats mt-3">
+                <div class="dash-hero-pill">
+                    <i class="bi bi-shield-check-fill" style="color:#a5b4fc;"></i>
+                    {{ user.role }}
+                </div>
+                <div class="dash-hero-pill">
+                    <i class="bi bi-check2-circle" style="color:#6ee7b7;"></i>
+                    {{ days_present|default:"0" }} Days Present
+                </div>
+            </div>
+        </div>
+        <div class="dash-hero-date">
+            <div class="hero-time" id="heroClock"></div>
+            <div class="hero-date-text" id="heroDate"></div>
+        </div>
+    </div>
 </div>
 
 <!-- Student KPI Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-6 col-lg-3">
-        <div class="card elite-stat-card stat-primary h-100 stagger-1">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <span class="stat-label">Your Role</span>
-                    <span class="stat-icon" style="background: var(--elite-primary-subtle); color: var(--elite-primary);">
-                        <i class="bi bi-shield-check"></i>
-                    </span>
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3 dash-anim dash-anim-2">
+        <div class="kpi-card kpi-gradient-primary h-100" style="cursor:default;">
+            <div class="card">
+                <div class="card-body">
+                    <div class="kpi-bg-circle"></div>
+                    <div class="kpi-bg-circle-2"></div>
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div>
+                            <div class="kpi-label">Your Role</div>
+                            <div class="kpi-value" style="font-size:1.5rem;">{{ user.role }}</div>
+                        </div>
+                        <div class="kpi-icon-wrap">
+                            <i class="bi bi-shield-check-fill"></i>
+                        </div>
+                    </div>
+                    <p class="kpi-sub">{{ user.first_name|default:user.username }}</p>
                 </div>
-                <div class="stat-value text-gradient" style="font-size: 1.3rem;">{{ user.role }}</div>
-                <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">{{ user.first_name|default:user.username }}</p>
             </div>
         </div>
     </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-success h-100 stagger-2">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Days Present</span>
-                        <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald);">
+    <div class="col-6 col-lg-3 dash-anim dash-anim-3">
+        <a href="{% url 'attendance:list' %}" class="kpi-card kpi-gradient-success h-100">
+            <div class="card">
+                <div class="card-body">
+                    <div class="kpi-bg-circle"></div>
+                    <div class="kpi-bg-circle-2"></div>
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div>
+                            <div class="kpi-label">Days Present</div>
+                            <div class="kpi-value">{{ days_present|default:"0" }}</div>
+                        </div>
+                        <div class="kpi-icon-wrap">
                             <i class="bi bi-check-circle-fill"></i>
-                        </span>
+                        </div>
                     </div>
-                    <div class="stat-value" style="color: var(--elite-emerald);">{{ days_present|default:"0" }}</div>
-                    <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">This month</p>
+                    <p class="kpi-sub">This month</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'attendance:list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-warning h-100 stagger-3">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Days Late</span>
-                        <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber);">
+    <div class="col-6 col-lg-3 dash-anim dash-anim-4">
+        <a href="{% url 'attendance:list' %}" class="kpi-card kpi-gradient-warning h-100">
+            <div class="card">
+                <div class="card-body">
+                    <div class="kpi-bg-circle"></div>
+                    <div class="kpi-bg-circle-2"></div>
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div>
+                            <div class="kpi-label">Days Late</div>
+                            <div class="kpi-value">{{ days_late|default:"0" }}</div>
+                        </div>
+                        <div class="kpi-icon-wrap">
                             <i class="bi bi-exclamation-triangle-fill"></i>
-                        </span>
+                        </div>
                     </div>
-                    <div class="stat-value" style="color: var(--elite-amber);">{{ days_late|default:"0" }}</div>
-                    <p class="mb-0 small mt-1" style="color: var(--elite-text-muted);">This month</p>
+                    <p class="kpi-sub">This month</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-6 col-lg-3">
-        <a href="{% url 'leave:leave_list' %}" class="text-decoration-none">
-            <div class="card elite-stat-card stat-danger h-100 stagger-4">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="stat-label">Pending Leaves</span>
-                        <span class="stat-icon" style="background: rgba(244,63,94,0.1); color: var(--elite-rose);">
+    <div class="col-6 col-lg-3 dash-anim dash-anim-5">
+        <a href="{% url 'leave:leave_list' %}" class="kpi-card kpi-gradient-danger h-100">
+            <div class="card">
+                <div class="card-body">
+                    <div class="kpi-bg-circle"></div>
+                    <div class="kpi-bg-circle-2"></div>
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div>
+                            <div class="kpi-label">Pending Leaves</div>
+                            <div class="kpi-value">{{ pending_leaves|default:"0" }}</div>
+                        </div>
+                        <div class="kpi-icon-wrap">
                             <i class="bi bi-hourglass-split"></i>
-                        </span>
+                        </div>
                     </div>
-                    <div class="stat-value" style="color: var(--elite-rose);">{{ pending_leaves|default:"0" }}</div>
+                    <p class="kpi-sub"><i class="bi bi-arrow-right me-1"></i>View requests</p>
                 </div>
             </div>
         </a>
     </div>
 </div>
 
-<!-- Mark Attendance + Clock -->
-<div class="row g-4 mb-4">
-    <div class="col-12 col-md-6">
-        <div class="card stagger-5">
-            <div class="card-body p-5 text-center">
-                <div class="mb-3">
-                    <span class="clock-widget" id="clock"></span>
+<!-- Clock + Quick Actions -->
+<div class="row g-4">
+    <!-- Premium Clock Card -->
+    <div class="col-12 col-md-5 dash-anim dash-anim-6">
+        <div class="card clock-card h-100">
+            <div class="clock-card-body">
+                <div class="premium-clock" id="clock"></div>
+                <div class="premium-clock-date">
+                    <i class="bi bi-calendar3 me-1"></i><span id="dateDisplay"></span>
                 </div>
-                <p class="mb-4 small" style="color: var(--elite-text-muted);">
-                    <i class="bi bi-calendar3 me-1"></i>
-                    <span id="dateDisplay"></span>
-                </p>
 
                 {% if not attendance_today %}
-                <p class="text-danger fw-bold"><i class="bi bi-exclamation-circle me-1"></i> You haven't marked your attendance yet.</p>
-                <p class="small text-muted">Use the <strong>Mark IN</strong> button in the top right menu to check in.</p>
+                <div class="attendance-status-badge not-marked mb-2">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    Not marked yet
+                </div>
+                <p class="attendance-hint">Use <strong style="color:rgba(255,255,255,0.7);">Mark IN</strong> button in top right to check in.</p>
+
                 {% elif not attendance_today.time_out %}
-                <p class="text-warning fw-bold"><i class="bi bi-clock-history me-1"></i> Currently working...</p>
-                <p class="small text-muted">Use the <strong>Mark OUT</strong> button in the top right menu to check out.</p>
+                <div class="attendance-status-badge working mb-2">
+                    <i class="bi bi-clock-fill"></i>
+                    Currently Working…
+                </div>
+                <p class="attendance-hint">Use <strong style="color:rgba(255,255,255,0.7);">Mark OUT</strong> in top right to check out.</p>
+
                 {% else %}
-                <button class="btn btn-light btn-lg px-5 py-3 fw-bold" disabled style="border-radius: var(--elite-radius-full);">
-                    <i class="bi bi-check-circle me-2"></i> Done ({{ attendance_today.working_hours }} hrs)
-                </button>
+                <div class="attendance-status-badge done mb-2">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Done — {{ attendance_today.working_hours }} hrs today
+                </div>
+                <p class="attendance-hint">Great job! See you tomorrow. 👏</p>
                 {% endif %}
             </div>
         </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="col-12 col-md-6">
-        <div class="card stagger-6 h-100">
-            <div class="card-header">
-                <h6 class="fw-bold mb-0"><i class="bi bi-lightning-fill me-2 text-gradient"></i>Quick Actions</h6>
+    <div class="col-12 col-md-7 dash-anim dash-anim-7">
+        <div class="card dash-card h-100">
+            <div class="card-header-premium">
+                <h6 class="dash-section-title">
+                    <span class="dash-section-icon" style="background: rgba(99,102,241,0.12); color: var(--elite-primary);">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </span>
+                    Quick Actions
+                </h6>
             </div>
-            <div class="card-body d-flex flex-column gap-3 p-4">
-                <a href="{% url 'leave:apply_leave' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
-                    <span class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--elite-amber); width: 40px; height: 40px;">
+            <div class="card-body" style="padding: 20px; display:flex; flex-direction:column; gap:12px;">
+                <a href="{% url 'leave:apply_leave' %}" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: rgba(245,158,11,0.12); color: var(--elite-amber);">
                         <i class="bi bi-envelope-paper-fill"></i>
-                    </span>
-                    <div>
-                        <span class="fw-semibold d-block">Apply for Leave</span>
-                        <small style="color: var(--elite-text-muted);">Submit a new leave request</small>
                     </div>
+                    <div>
+                        <div class="quick-action-title">Apply for Leave</div>
+                        <p class="quick-action-desc">Submit a new leave request</p>
+                    </div>
+                    <i class="bi bi-arrow-right quick-action-arrow"></i>
                 </a>
-                <a href="{% url 'conveyance:submit' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
-                    <span class="stat-icon" style="background: rgba(14,165,233,0.1); color: var(--elite-sky); width: 40px; height: 40px;">
+                <a href="{% url 'conveyance:submit' %}" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: rgba(14,165,233,0.12); color: var(--elite-sky);">
                         <i class="bi bi-car-front-fill"></i>
-                    </span>
-                    <div>
-                        <span class="fw-semibold d-block">Submit Conveyance</span>
-                        <small style="color: var(--elite-text-muted);">File a travel expense claim</small>
                     </div>
+                    <div>
+                        <div class="quick-action-title">Submit Conveyance</div>
+                        <p class="quick-action-desc">File a travel expense claim</p>
+                    </div>
+                    <i class="bi bi-arrow-right quick-action-arrow"></i>
                 </a>
-                <a href="{% url 'payroll:list' %}" class="btn btn-light text-start d-flex align-items-center gap-3 py-3 px-4">
-                    <span class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--elite-emerald); width: 40px; height: 40px;">
+                <a href="{% url 'payroll:list' %}" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: rgba(16,185,129,0.12); color: var(--elite-emerald);">
                         <i class="bi bi-cash-stack"></i>
-                    </span>
-                    <div>
-                        <span class="fw-semibold d-block">View Payroll</span>
-                        <small style="color: var(--elite-text-muted);">Check payslips & salary</small>
                     </div>
+                    <div>
+                        <div class="quick-action-title">View Payroll</div>
+                        <p class="quick-action-desc">Check payslips &amp; salary history</p>
+                    </div>
+                    <i class="bi bi-arrow-right quick-action-arrow"></i>
+                </a>
+                <a href="{% url 'attendance:list' %}" class="quick-action-card">
+                    <div class="quick-action-icon" style="background: rgba(99,102,241,0.12); color: var(--elite-primary);">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <div>
+                        <div class="quick-action-title">Attendance History</div>
+                        <p class="quick-action-desc">View your full attendance log</p>
+                    </div>
+                    <i class="bi bi-arrow-right quick-action-arrow"></i>
                 </a>
             </div>
         </div>
     </div>
 </div>
-
-
 
 {% endif %}
 
-<!-- Clock & Date Script (shared) -->
+<!-- ── Shared Clock Script ───────────────────────────── -->
 <script>
-    function updateClock() {
+(function() {
+    function pad(n) { return n < 10 ? '0' + n : n; }
+
+    function updateClocks() {
         const now = new Date();
-        const clock = document.getElementById('clock');
-        if (clock) clock.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-        const dateEl = document.getElementById('dateDisplay');
-        if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12  = h % 12 || 12;
+        const timeStr = `${pad(h12)}:${pad(m)}:${pad(s)} ${ampm}`;
+
+        const dateStr = now.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Student clock
+        const cl = document.getElementById('clock');
+        if (cl) cl.textContent = timeStr;
+        const de = document.getElementById('dateDisplay');
+        if (de) de.textContent = dateStr;
+
+        // Admin hero clock
+        const ha = document.getElementById('heroClockAdmin');
+        if (ha) ha.textContent = timeStr;
+        const hd = document.getElementById('heroDateAdmin');
+        if (hd) hd.textContent = dateStr;
+
+        // Student hero clock
+        const hs = document.getElementById('heroClock');
+        if (hs) hs.textContent = timeStr;
+        const hsd = document.getElementById('heroDate');
+        if (hsd) hsd.textContent = dateStr;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+
+    setInterval(updateClocks, 1000);
+    updateClocks();
+})();
 </script>
 
 {% if popup_notification %}
-<!-- Custom Announcement Popup Overlay -->
-<div id="customPopupOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1050; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-    <div style="background: white; border-radius: var(--elite-radius-lg); max-width: 400px; width: 90%; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: scale(1); transition: transform 0.3s ease-out;">
-        <div style="background: var(--elite-gradient-primary); padding: 15px 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
-            <h5 style="margin:0; font-weight: bold; font-size: 1.1rem;"><i class="bi bi-megaphone-fill me-2"></i>New Announcement</h5>
+<!-- Premium Announcement Popup -->
+<div id="customPopupOverlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1050; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); animation: fadeInScale 0.4s cubic-bezier(0.16,1,0.3,1) both;">
+    <div style="background: var(--elite-surface-solid); border-radius: 24px; max-width: 420px; width: 90%; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.4); border: 1px solid var(--elite-border);">
+        <div style="background: var(--elite-gradient-primary); padding: 20px 24px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <h5 style="margin:0; font-weight: 800; font-size: 1rem; letter-spacing:-0.02em;">
+                <i class="bi bi-megaphone-fill me-2"></i>New Announcement
+            </h5>
+            <button onclick="closeCustomPopup()" style="background: rgba(255,255,255,0.2); border: none; border-radius: 8px; width: 30px; height: 30px; color: #fff; cursor: pointer; display:flex; align-items:center; justify-content:center; font-size:0.9rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
-        <div style="padding: 30px 20px; text-align: center;">
-            <i class="bi bi-envelope-paper-heart text-primary mb-3" style="font-size: 3rem;"></i>
-            <p style="font-size: 1.1rem; color: var(--elite-text-primary); margin:0;">{{ popup_notification.message }}</p>
+        <div style="padding: 36px 28px; text-align: center;">
+            <div style="width: 64px; height: 64px; border-radius: 18px; background: var(--elite-primary-subtle); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <i class="bi bi-envelope-paper-heart" style="font-size: 1.8rem; color: var(--elite-primary);"></i>
+            </div>
+            <p style="font-size: 1.05rem; color: var(--elite-text); line-height: 1.6; margin: 0; font-weight: 500;">{{ popup_notification.message }}</p>
         </div>
-        <div style="padding: 15px 20px; text-align: center; border-top: 1px solid rgba(0,0,0,0.05);">
-            <button onclick="closeCustomPopup()" class="btn btn-primary px-5 fw-bold" style="border-radius: var(--elite-radius-full);">Got it!</button>
+        <div style="padding: 16px 28px 24px; text-align: center;">
+            <button onclick="closeCustomPopup()" style="background: var(--elite-gradient-primary); border: none; border-radius: 50px; color: #fff; font-weight: 700; font-size: 0.9rem; padding: 12px 36px; cursor: pointer; box-shadow: 0 8px 24px rgba(99,102,241,0.35); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 32px rgba(99,102,241,0.5)';" onmouseout="this.style.transform=''; this.style.boxShadow='0 8px 24px rgba(99,102,241,0.35)';">
+                Got it! 👍
+            </button>
         </div>
     </div>
 </div>
-
 <script>
 function closeCustomPopup() {
-    // Hide the overlay immediately
-    var overlay = document.getElementById('customPopupOverlay');
-    if(overlay) {
-        overlay.style.display = 'none';
+    const overlay = document.getElementById('customPopupOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => overlay.style.display = 'none', 300);
     }
-    
-    // Notify server to not show it again
     fetch("{% url 'core:dismiss_popup' %}", {
         method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-            "Content-Type": "application/json"
-        },
+        headers: { "X-CSRFToken": "{{ csrf_token }}", "Content-Type": "application/json" },
         body: JSON.stringify({})
-    }).catch(err => console.log("Error dismissing popup:", err));
+    }).catch(err => console.log("Error:", err));
 }
 </script>
 {% endif %}

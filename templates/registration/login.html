@@ -3,98 +3,621 @@
 
 {% block title %}Sign In — RAC HRMS{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ═══════════════════════════════════════════
+   LOGIN PAGE — PREMIUM REDESIGN v4.0
+   ═══════════════════════════════════════════ */
+
+/* Override login panels for premium look */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Left Panel ─── */
+.login-panel-left {
+    flex: 1.1;
+    background: linear-gradient(135deg, #1a0533 0%, #2d0a5e 25%, #4f0d9e 50%, #6d28d9 75%, #7c3aed 100%) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    animation: none !important;
+}
+
+/* Animated orbs */
+.login-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    pointer-events: none;
+    animation: orbFloat linear infinite;
+}
+.login-orb-1 {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    top: -10%; left: -8%;
+    animation-duration: 14s;
+    animation-delay: 0s;
+}
+.login-orb-2 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+    bottom: 5%; right: -5%;
+    animation-duration: 18s;
+    animation-delay: -4s;
+}
+.login-orb-3 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+    top: 45%; left: 55%;
+    animation-duration: 22s;
+    animation-delay: -9s;
+    opacity: 0.3;
+}
+@keyframes orbFloat {
+    0%   { transform: translate(0px, 0px) scale(1); }
+    25%  { transform: translate(30px, -20px) scale(1.05); }
+    50%  { transform: translate(10px, 30px) scale(0.97); }
+    75%  { transform: translate(-20px, 10px) scale(1.03); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* Grid pattern overlay */
+.login-panel-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+}
+.login-panel-left::after {
+    display: none;
+}
+
+.login-brand {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    padding: 40px;
+}
+
+.login-brand .brand-icon {
+    width: 90px; height: 90px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    margin: 0 auto 28px;
+    box-shadow: 0 8px 32px rgba(168,85,247,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+    animation: brandPulse 3s ease-in-out infinite;
+}
+@keyframes brandPulse {
+    0%, 100% { box-shadow: 0 8px 32px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.2); }
+    50%       { box-shadow: 0 8px 48px rgba(168,85,247,0.7), inset 0 1px 0 rgba(255,255,255,0.2); }
+}
+
+.login-brand h2 {
+    font-size: 2.6rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.05em !important;
+    margin-bottom: 10px !important;
+    background: linear-gradient(135deg, #ffffff 0%, #e0c3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-brand p {
+    opacity: 0.75;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+/* Feature badges */
+.login-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.login-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 12px 18px;
+    animation: fadeInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.login-feature-item:nth-child(1) { animation-delay: 0.3s; }
+.login-feature-item:nth-child(2) { animation-delay: 0.45s; }
+.login-feature-item:nth-child(3) { animation-delay: 0.6s; }
+.login-feature-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.login-feature-text {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+/* ── Right Panel ─── */
+.login-panel-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    background: var(--elite-bg);
+    position: relative;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.login-card .card {
+    border: 1px solid var(--elite-border) !important;
+    border-radius: 28px !important;
+    padding: 44px !important;
+    background: var(--elite-surface) !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow:
+        0 24px 80px -16px rgba(0,0,0,0.12),
+        0 8px 24px rgba(0,0,0,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    position: relative;
+    overflow: hidden;
+}
+[data-bs-theme="dark"] .login-card .card {
+    background: rgba(18, 18, 28, 0.85) !important;
+    box-shadow:
+        0 24px 80px -16px rgba(0,0,0,0.5),
+        0 8px 24px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+/* Subtle card top accent line */
+.login-card .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #6366f1, #8b5cf6, #a855f7, transparent);
+    border-radius: 0 0 2px 2px;
+}
+
+/* Card shine effect */
+.login-card .card::after {
+    content: '';
+    position: absolute;
+    top: -60%; left: -60%;
+    width: 120%; height: 120%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* ── Login Header ─── */
+.login-header-icon {
+    width: 64px; height: 64px;
+    border-radius: 18px;
+    background: var(--elite-gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #fff;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+    animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* ── Floating Label Inputs ─── */
+.login-input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+.login-input-group .form-control {
+    height: 58px;
+    border-radius: 14px !important;
+    border: 1.5px solid var(--elite-border) !important;
+    background: var(--elite-surface-solid) !important;
+    font-size: 0.95rem !important;
+    padding: 18px 48px 6px 48px !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    color: var(--elite-text) !important;
+}
+[data-bs-theme="dark"] .login-input-group .form-control {
+    background: rgba(30, 30, 42, 0.8) !important;
+}
+.login-input-group .form-control:focus {
+    border-color: var(--elite-primary) !important;
+    box-shadow: 0 0 0 3.5px rgba(99,102,241,0.18), 0 4px 16px rgba(99,102,241,0.1) !important;
+    background: var(--elite-surface-solid) !important;
+}
+.login-input-group .form-control.is-invalid {
+    border-color: var(--elite-rose) !important;
+    box-shadow: 0 0 0 3px rgba(244,63,94,0.15) !important;
+}
+.login-input-group label {
+    position: absolute;
+    left: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    color: var(--elite-text-muted);
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-weight: 500;
+    z-index: 2;
+}
+.login-input-group .form-control:focus ~ label,
+.login-input-group .form-control:not(:placeholder-shown) ~ label,
+.login-input-group .form-control.has-value ~ label {
+    top: 12px;
+    transform: translateY(0);
+    font-size: 0.72rem;
+    color: var(--elite-primary);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+.login-input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--elite-text-muted);
+    font-size: 1rem;
+    transition: color 0.2s ease;
+    z-index: 3;
+    pointer-events: none;
+}
+.login-input-group:focus-within .login-input-icon {
+    color: var(--elite-primary);
+}
+.login-toggle-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--elite-text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+.login-toggle-btn:hover {
+    color: var(--elite-primary);
+    background: var(--elite-primary-subtle);
+}
+
+/* ── Error Alert ─── */
+.login-error {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(244,63,94,0.07);
+    border: 1px solid rgba(244,63,94,0.25);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    animation: shakeError 0.5s ease;
+    color: var(--elite-rose);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-6px); }
+    40%       { transform: translateX(6px); }
+    60%       { transform: translateX(-4px); }
+    80%       { transform: translateX(4px); }
+}
+
+/* ── Submit Button ─── */
+.login-btn {
+    width: 100%;
+    height: 56px;
+    border-radius: 14px !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    background: var(--elite-gradient-primary) !important;
+    border: none !important;
+    color: #fff !important;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.35) !important;
+    margin-top: 6px;
+}
+.login-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+.login-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 16px 40px rgba(99,102,241,0.5) !important;
+    filter: brightness(1.05);
+}
+.login-btn:active {
+    transform: translateY(0px) !important;
+    box-shadow: 0 6px 16px rgba(99,102,241,0.3) !important;
+}
+.login-btn .btn-spinner {
+    display: none;
+}
+.login-btn.loading .btn-text { display: none; }
+.login-btn.loading .btn-spinner { display: inline-block; }
+
+/* ── Divider ─── */
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    color: var(--elite-text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--elite-border);
+}
+
+/* ── Footer Text ─── */
+.login-footer-text {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.8rem;
+    color: var(--elite-text-muted);
+    line-height: 1.6;
+}
+.login-footer-text strong {
+    color: var(--elite-text-secondary);
+    font-weight: 600;
+}
+
+/* ── Mobile ─── */
+@media (max-width: 768px) {
+    .login-panel-left { display: none !important; }
+    .login-panel-right { padding: 24px 20px; }
+    .login-card .card { padding: 32px 24px !important; border-radius: 20px !important; }
+    .login-card { max-width: 100%; }
+}
+</style>
+{% endblock %}
+
 {% block auth_content %}
 <div class="login-container">
-    <!-- Left Panel — Brand -->
+
+    <!-- ════ LEFT PANEL — BRAND ════ -->
     <div class="login-panel-left">
+        <!-- Animated orbs -->
+        <div class="login-orb login-orb-1"></div>
+        <div class="login-orb login-orb-2"></div>
+        <div class="login-orb login-orb-3"></div>
+
         <div class="login-brand">
+            <!-- Logo Icon -->
             <div class="brand-icon">
-                <i class="bi bi-buildings-fill"></i>
+                <i class="bi bi-buildings-fill" style="color:#fff;"></i>
             </div>
+
             <h2>RAC HRMS</h2>
-            <p>Human Resource Management System</p>
-            <p style="opacity: 0.5; font-size: 0.85rem; margin-top: 16px;">Rahman Anis & Co.<br>Chartered Accountants</p>
+            <p style="font-size:1rem; margin-bottom: 6px;">Human Resource Management System</p>
+            <p style="opacity: 0.5; font-size: 0.83rem; margin-top: 8px;">
+                Rahman Anis &amp; Co. &nbsp;·&nbsp; Chartered Accountants
+            </p>
+
+            <!-- Feature highlights -->
+            <div class="login-features">
+                <div class="login-feature-item">
+                    <div class="login-feature-icon" style="background: rgba(99,102,241,0.25);">
+                        <i class="bi bi-people-fill" style="color:#a5b4fc;"></i>
+                    </div>
+                    <div class="login-feature-text">Complete HR & Payroll Management</div>
+                </div>
+                <div class="login-feature-item">
+                    <div class="login-feature-icon" style="background: rgba(16,185,129,0.2);">
+                        <i class="bi bi-calendar-check-fill" style="color:#6ee7b7;"></i>
+                    </div>
+                    <div class="login-feature-text">Attendance & Leave Tracking</div>
+                </div>
+                <div class="login-feature-item">
+                    <div class="login-feature-icon" style="background: rgba(245,158,11,0.2);">
+                        <i class="bi bi-bar-chart-fill" style="color:#fde68a;"></i>
+                    </div>
+                    <div class="login-feature-text">Real-time Reports & Analytics</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Right Panel — Login Form -->
+    <!-- ════ RIGHT PANEL — FORM ════ -->
     <div class="login-panel-right">
         <div class="login-card">
             <div class="card">
-                <div class="text-center mb-4">
-                    <div class="d-md-none mb-3">
-                        <span class="elite-avatar elite-avatar-lg" style="background: var(--elite-gradient-primary); display: inline-flex;">
-                            <i class="bi bi-buildings-fill" style="font-size: 2.5rem;"></i>
-                        </span>
+
+                <!-- Mobile logo (hidden on desktop) -->
+                <div class="d-md-none text-center mb-4">
+                    <div class="login-header-icon" style="width:56px; height:56px; font-size:1.4rem;">
+                        <i class="bi bi-buildings-fill"></i>
                     </div>
-                    <h3 class="fw-bold mb-1" style="color: var(--elite-text);">Welcome back</h3>
-                    <p style="color: var(--elite-text-muted); margin: 0;">Sign in to your account to continue</p>
                 </div>
 
-                {% if form.errors %}
-                <div class="alert alert-danger py-2 mb-4">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-exclamation-circle-fill me-2"></i>
-                        <small class="fw-semibold">Invalid username or password.</small>
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <div class="login-header-icon d-none d-md-flex">
+                        <i class="bi bi-shield-lock-fill"></i>
                     </div>
+                    <h3 class="fw-bold mb-1" style="font-size: 1.55rem; letter-spacing: -0.03em; color: var(--elite-text);">
+                        Welcome back 👋
+                    </h3>
+                    <p style="color: var(--elite-text-muted); margin: 0; font-size: 0.9rem;">
+                        Sign in to your RAC HRMS account
+                    </p>
+                </div>
+
+                <!-- Error Alert -->
+                {% if form.errors %}
+                <div class="login-error">
+                    <i class="bi bi-exclamation-circle-fill" style="font-size: 1rem; flex-shrink: 0;"></i>
+                    <span>Incorrect username or password. Please try again.</span>
                 </div>
                 {% endif %}
 
-                <form method="post">
+                <!-- Form -->
+                <form method="post" id="loginForm" novalidate autocomplete="on">
                     {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label class="form-label" for="id_username">Username</label>
-                        <div class="position-relative">
-                            <input type="text" name="username" id="id_username" class="form-control form-control-lg"
-                                   placeholder="Enter your username" autofocus
-                                   style="padding-left: 44px;"
-                                   value="{{ form.username.value|default:'' }}">
-                            <i class="bi bi-person-fill position-absolute" style="left: 16px; top: 50%; transform: translateY(-50%); color: var(--elite-text-muted);"></i>
-                        </div>
+
+                    <!-- Username -->
+                    <div class="login-input-group">
+                        <i class="bi bi-person-fill login-input-icon"></i>
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            class="form-control{% if form.errors %} is-invalid{% endif %}"
+                            placeholder=" "
+                            autofocus
+                            autocomplete="username"
+                            value="{{ form.username.value|default:'' }}"
+                        >
+                        <label for="id_username">Username</label>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label" for="id_password">Password</label>
-                        <div class="position-relative">
-                            <input type="password" name="password" id="id_password" class="form-control form-control-lg"
-                                   placeholder="Enter your password"
-                                   style="padding-left: 44px; padding-right: 44px;">
-                            <i class="bi bi-lock-fill position-absolute" style="left: 16px; top: 50%; transform: translateY(-50%); color: var(--elite-text-muted);"></i>
-                            <button type="button" class="btn btn-link position-absolute p-0" id="togglePassword"
-                                    style="right: 16px; top: 50%; transform: translateY(-50%); color: var(--elite-text-muted); text-decoration: none;">
-                                <i class="bi bi-eye-fill"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-lg fw-bold" style="padding: 14px;">
-                            Sign In <i class="bi bi-arrow-right ms-2"></i>
+                    <!-- Password -->
+                    <div class="login-input-group">
+                        <i class="bi bi-lock-fill login-input-icon"></i>
+                        <input
+                            type="password"
+                            name="password"
+                            id="id_password"
+                            class="form-control{% if form.errors %} is-invalid{% endif %}"
+                            placeholder=" "
+                            autocomplete="current-password"
+                        >
+                        <label for="id_password">Password</label>
+                        <button type="button" class="login-toggle-btn" id="togglePassword" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye-fill" id="togglePasswordIcon"></i>
                         </button>
                     </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="login-btn" id="loginSubmitBtn">
+                        <span class="btn-text">
+                            Sign In &nbsp;<i class="bi bi-arrow-right-short" style="font-size: 1.2rem; vertical-align: -2px;"></i>
+                        </span>
+                        <span class="btn-spinner">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Signing in…
+                        </span>
+                    </button>
+
                     <input type="hidden" name="next" value="{{ next|default:'/' }}">
                 </form>
+
+                <!-- Footer -->
+                <div class="login-footer-text">
+                    <i class="bi bi-shield-check me-1" style="color: var(--elite-emerald);"></i>
+                    <strong>Secure login</strong> — Your session is encrypted and protected.
+                </div>
+
             </div>
+        </div>
+
+        <!-- Bottom branding -->
+        <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;">
+            <small style="color: var(--elite-text-muted); font-size: 0.75rem; white-space: nowrap;">
+                © 2026 Rahman Anis &amp; Co. &nbsp;·&nbsp; RAC HRMS v3.0
+            </small>
         </div>
     </div>
 </div>
 
 <script>
-    // Password visibility toggle
-    const toggleBtn = document.getElementById('togglePassword');
+(function() {
+    /* ── Password Toggle ── */
+    const toggleBtn  = document.getElementById('togglePassword');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    const pwdInput   = document.getElementById('id_password');
+
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            const pwd = document.getElementById('id_password');
-            const icon = this.querySelector('i');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.className = 'bi bi-eye-slash-fill';
-            } else {
-                pwd.type = 'password';
-                icon.className = 'bi bi-eye-fill';
-            }
+        toggleBtn.addEventListener('click', function () {
+            const isHidden = pwdInput.type === 'password';
+            pwdInput.type  = isHidden ? 'text' : 'password';
+            toggleIcon.className = isHidden ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill';
         });
     }
+
+    /* ── Submit loading state ── */
+    const form      = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('loginSubmitBtn');
+    if (form && submitBtn) {
+        form.addEventListener('submit', function () {
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+        });
+    }
+
+    /* ── Pre-fill value detection for floating label ── */
+    const usernameInput = document.getElementById('id_username');
+    if (usernameInput && usernameInput.value) {
+        usernameInput.classList.add('has-value');
+    }
+    if (usernameInput) {
+        usernameInput.addEventListener('input', function () {
+            this.classList.toggle('has-value', this.value.length > 0);
+        });
+    }
+})();
 </script>
 {% endblock %}
