@@ -7,116 +7,287 @@
    ULTRA-PREMIUM DASHBOARD v4.0
    ══════════════════════════════════════════════════════════ */
 
-/* ── Hero Welcome Banner ───────────────────────────────── */
+/* ── Hero Welcome Banner — Light Mode (Warm Gold on Ivory) ── */
 .dash-hero {
     position: relative;
     border-radius: 24px;
     overflow: hidden;
-    padding: 36px 40px;
+    padding: 0;
     margin-bottom: 28px;
-    background: linear-gradient(135deg, #1e0a3c 0%, #3b0f6e 30%, #5b21b6 65%, #7c3aed 100%);
-    box-shadow: 0 20px 60px -12px rgba(109, 40, 217, 0.4), 0 4px 16px rgba(0,0,0,0.1);
-    animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    /* ☀️ LIGHT: warm ivory-champagne with gold warmth */
+    background: linear-gradient(145deg,
+        #FFFDF5 0%,
+        #FFF8E8 30%,
+        #FFFBF0 65%,
+        #FFF6DC 100%
+    );
+    box-shadow:
+        0 8px 32px -6px rgba(212,136,10,0.14),
+        0 0 0 1.5px rgba(212,136,10,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* ── Hero — DARK Mode (Obsidian Charcoal) ─────────────── */
+[data-bs-theme="dark"] .dash-hero {
+    background: linear-gradient(145deg,
+        #0E0C09 0%,
+        #1A1814 45%,
+        #2C2820 100%
+    );
+    box-shadow:
+        0 24px 64px -12px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(212,136,10,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* ── Gold dot grid (both modes) ───────────────────────── */
 .dash-hero::before {
     content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(212,136,10,0.10) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none; z-index: 0;
+    opacity: 1;
 }
+[data-bs-theme="dark"] .dash-hero::before {
+    background-image: radial-gradient(circle, rgba(245,166,35,0.13) 1px, transparent 1px);
+}
+
+/* ── Bottom vignette fade ─────────────────────────────── */
+.dash-hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    /* Light: subtle warm fade at bottom */
+    background: linear-gradient(180deg, transparent 55%, rgba(242,210,120,0.08) 100%);
+    pointer-events: none; z-index: 0;
+}
+[data-bs-theme="dark"] .dash-hero::after {
+    background: linear-gradient(180deg, transparent 50%, rgba(10,8,5,0.35) 100%);
+}
+
+/* ── Ambient glow orbs ────────────────────────────────── */
 .dash-hero-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(50px);
+    filter: blur(55px);
     pointer-events: none;
-    opacity: 0.5;
 }
 .dash-hero-orb-1 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
-    top: -60%; right: 5%;
-    animation: orbFloat 12s ease-in-out infinite;
+    width: 340px; height: 340px;
+    top: -55%; right: 6%;
+    /* Light: softer gold bloom */
+    background: radial-gradient(circle, rgba(245,166,35,0.22) 0%, transparent 70%);
+    animation: orbFloat 14s ease-in-out infinite;
 }
 .dash-hero-orb-2 {
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
-    bottom: -40%; left: 15%;
-    animation: orbFloat 16s ease-in-out infinite 3s;
+    width: 210px; height: 210px;
+    bottom: -45%; left: 10%;
+    background: radial-gradient(circle, rgba(212,136,10,0.16) 0%, transparent 70%);
+    animation: orbFloat 18s ease-in-out infinite 3s;
 }
+[data-bs-theme="dark"] .dash-hero-orb-1 {
+    background: radial-gradient(circle, rgba(245,166,35,0.50) 0%, transparent 70%);
+}
+[data-bs-theme="dark"] .dash-hero-orb-2 {
+    background: radial-gradient(circle, rgba(212,136,10,0.40) 0%, transparent 70%);
+}
+
 @keyframes orbFloat {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(20px, -15px) scale(1.05); }
-    66% { transform: translate(-10px, 20px) scale(0.97); }
+    33%       { transform: translate(22px, -14px) scale(1.06); }
+    66%       { transform: translate(-12px, 18px) scale(0.97); }
 }
+
+/* ── Gold shimmer top bar (both modes) ───────────────── */
+.dash-hero-top-bar {
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%, #B8720A 10%,
+        #F5A623 30%, #FFD95A 52%,
+        #F5A623 72%, #D4880A 90%,
+        transparent 100%
+    );
+    background-size: 250% 100%;
+    animation: goldFlow 6s ease infinite;
+    position: relative; z-index: 3;
+}
+
+/* ── Left gold edge ───────────────────────────────────── */
+.dash-hero-edge {
+    position: absolute;
+    left: 0; top: 3px; bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom,
+        rgba(255,217,90,0.95),
+        rgba(245,166,35,0.75),
+        rgba(212,136,10,0.40),
+        transparent
+    );
+    border-radius: 0 0 0 24px;
+    box-shadow: 2px 0 16px rgba(212,136,10,0.38);
+    z-index: 3;
+}
+[data-bs-theme="dark"] .dash-hero-edge {
+    box-shadow: 2px 0 20px rgba(212,136,10,0.55);
+}
+
+/* ── Content wrapper ─────────────────────────────────── */
 .dash-hero-content {
-    position: relative;
-    z-index: 2;
+    position: relative; z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
     flex-wrap: wrap;
+    padding: 30px 40px;
 }
+
+/* ── Greeting heading ────────────────────────────────── */
 .dash-hero-text h2 {
-    font-size: 1.85rem;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.04em;
-    margin-bottom: 6px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.0rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    margin-bottom: 8px;
+    line-height: 1.15;
+    /* Light: burnished deep gold for contrast on cream */
+    background: linear-gradient(135deg, #B8720A 0%, #D4880A 35%, #F5A623 70%, #E8960F 100%);
+    background-size: 200% auto;
+    animation: goldFlow 7s linear infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
+/* Dark: bright luminous gold on obsidian */
+[data-bs-theme="dark"] .dash-hero-text h2 {
+    background: linear-gradient(135deg, #FFD95A 0%, #F5A623 50%, #E8960F 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* ── Subtitle text ───────────────────────────────────── */
 .dash-hero-text p {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     margin: 0;
     font-weight: 500;
+    /* Light: warm charcoal on ivory */
+    color: rgba(92, 72, 30, 0.70);
 }
-.dash-hero-stats {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+.dash-hero-text p strong {
+    color: rgba(140, 88, 10, 0.90);
+    font-weight: 700;
 }
+[data-bs-theme="dark"] .dash-hero-text p {
+    color: rgba(245, 220, 160, 0.68);
+}
+[data-bs-theme="dark"] .dash-hero-text p strong {
+    color: rgba(255, 217, 90, 0.88);
+}
+
+/* ── Stat pills ──────────────────────────────────────── */
+.dash-hero-stats { display: flex; gap: 8px; flex-wrap: wrap; }
 .dash-hero-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; gap: 8px;
     border-radius: 50px;
-    padding: 8px 16px;
-    color: #fff;
-    font-size: 0.82rem;
+    padding: 8px 18px;
+    font-size: 0.81rem;
     font-weight: 600;
     white-space: nowrap;
-}
-.dash-hero-pill i { font-size: 0.9rem; opacity: 0.85; }
-.dash-hero-date {
-    background: rgba(255,255,255,0.08);
+    transition: all 0.25s ease;
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px;
-    padding: 16px 24px;
+    /* Light: warm gold-tinted pill on cream */
+    background: rgba(212,136,10,0.09);
+    border: 1px solid rgba(212,136,10,0.22);
+    color: rgba(120, 78, 8, 0.88);
+}
+.dash-hero-pill:hover {
+    background: rgba(212,136,10,0.16);
+    border-color: rgba(212,136,10,0.38);
+    color: #8C580A;
+}
+.dash-hero-pill i { font-size: 0.88rem; opacity: 0.80; }
+
+[data-bs-theme="dark"] .dash-hero-pill {
+    background: rgba(245,166,35,0.10);
+    border: 1px solid rgba(245,166,35,0.22);
+    color: rgba(255, 220, 150, 0.92);
+}
+[data-bs-theme="dark"] .dash-hero-pill:hover {
+    background: rgba(245,166,35,0.18);
+    border-color: rgba(245,166,35,0.40);
+    color: #FFD95A;
+}
+
+/* ── Clock / Date card ───────────────────────────────── */
+.dash-hero-date {
+    border-radius: 18px;
+    padding: 18px 28px;
     text-align: center;
-    color: #fff;
     flex-shrink: 0;
+    transition: all 0.3s ease;
+    /* Light: frosted warm glass panel */
+    background: rgba(255, 248, 225, 0.70);
+    border: 1.5px solid rgba(212,136,10,0.22);
+    box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,0.92),
+        0 4px 18px rgba(212,136,10,0.10);
 }
+.dash-hero-date:hover {
+    background: rgba(255, 248, 225, 0.90);
+    border-color: rgba(212,136,10,0.38);
+    box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,0.95),
+        0 6px 22px rgba(212,136,10,0.18);
+}
+
+[data-bs-theme="dark"] .dash-hero-date {
+    background: rgba(245,166,35,0.07);
+    border: 1.5px solid rgba(245,166,35,0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 4px 16px rgba(0,0,0,0.22);
+}
+[data-bs-theme="dark"] .dash-hero-date:hover {
+    background: rgba(245,166,35,0.13);
+    border-color: rgba(245,166,35,0.40);
+}
+
+/* Clock time */
 .dash-hero-date .hero-time {
-    font-size: 1.9rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1;
     font-family: 'Outfit', sans-serif;
+    font-size: 2.0rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    /* Light: deep burnished gold */
+    background: linear-gradient(135deg, #B8720A 0%, #D4880A 40%, #F5A623 80%, #E8960F 100%);
+    background-size: 200% auto;
+    animation: goldFlow 5s linear infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
+[data-bs-theme="dark"] .dash-hero-date .hero-time {
+    background: linear-gradient(135deg, #FFD95A 0%, #F5A623 60%, #E8960F 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* Date text label */
 .dash-hero-date .hero-date-text {
-    font-size: 0.72rem;
-    opacity: 0.65;
-    margin-top: 4px;
-    font-weight: 500;
+    font-size: 0.68rem;
+    margin-top: 5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    /* Light: warm muted gold-brown */
+    color: rgba(140, 100, 20, 0.55);
+}
+[data-bs-theme="dark"] .dash-hero-date .hero-date-text {
+    color: rgba(245,210,140,0.55);
 }
 
 /* ── Premium KPI Cards ─────────────────────────────────── */
@@ -140,42 +311,75 @@
     height: 100%;
 }
 
-/* Gradient KPI Cards */
+/* ══ KPI Gradient Cards — Sovereign Gold Palette ══════ */
+
+/* PRIMARY = Sovereign Metallic Gold (flagship card) */
 .kpi-gradient-primary .card {
-    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(99,102,241,0.5), 0 4px 12px rgba(99,102,241,0.2) !important;
+    background: linear-gradient(145deg, #B8720A 0%, #D4880A 25%, #F5A623 55%, #FFD95A 80%, #F5A623 100%) !important;
+    background-size: 200% auto !important;
+    animation: goldFlow 5s linear infinite !important;
+    box-shadow:
+        0 18px 48px -8px rgba(212,136,10,0.60),
+        0 4px 14px rgba(184,114,10,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.22) !important;
 }
+.kpi-gradient-primary .kpi-label { color: rgba(26,24,20,0.60) !important; }
+.kpi-gradient-primary .kpi-value { color: #1A1814 !important; }
+.kpi-gradient-primary .kpi-sub   { color: rgba(26,24,20,0.55) !important; }
+.kpi-gradient-primary .kpi-icon-wrap {
+    background: rgba(26,24,20,0.14) !important;
+    color: #1A1814 !important;
+}
+
+/* SUCCESS = Rich Emerald */
 .kpi-gradient-success .card {
-    background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(16,185,129,0.5), 0 4px 12px rgba(16,185,129,0.2) !important;
+    background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(5,150,105,0.55), 0 4px 14px rgba(5,150,105,0.22) !important;
 }
+
+/* WARNING = Deep Amber (complements gold) */
 .kpi-gradient-warning .card {
-    background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(245,158,11,0.5), 0 4px 12px rgba(245,158,11,0.2) !important;
+    background: linear-gradient(135deg, #92400e 0%, #b45309 40%, #d97706 75%, #f59e0b 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(180,83,9,0.55), 0 4px 14px rgba(180,83,9,0.22) !important;
 }
+
+/* DANGER = Deep Crimson */
 .kpi-gradient-danger .card {
-    background: linear-gradient(135deg, #dc2626 0%, #f43f5e 50%, #fb7185 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(244,63,94,0.5), 0 4px 12px rgba(244,63,94,0.2) !important;
+    background: linear-gradient(135deg, #9f1239 0%, #be123c 40%, #e11d48 75%, #f43f5e 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(190,18,60,0.55), 0 4px 14px rgba(190,18,60,0.22) !important;
 }
+
+/* SKY = Ocean Blue */
 .kpi-gradient-sky .card {
-    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(14,165,233,0.5), 0 4px 12px rgba(14,165,233,0.2) !important;
+    background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 50%, #0ea5e9 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(2,132,199,0.52), 0 4px 14px rgba(2,132,199,0.20) !important;
 }
+
+/* VIOLET → replaced with Obsidian Gold (dark luxury) */
 .kpi-gradient-violet .card {
-    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(139,92,246,0.5), 0 4px 12px rgba(139,92,246,0.2) !important;
+    background: linear-gradient(135deg, #0E0C09 0%, #1A1814 50%, #2C2820 100%) !important;
+    box-shadow:
+        0 16px 44px -8px rgba(0,0,0,0.60),
+        0 0 0 1px rgba(212,136,10,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
 }
+
+/* DARK = Deep Slate */
 .kpi-gradient-dark .card {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 80%) !important;
-    box-shadow: 0 16px 40px -8px rgba(30,41,59,0.5) !important;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 80%) !important;
+    box-shadow: 0 16px 44px -8px rgba(15,23,42,0.55) !important;
 }
+
+/* TEAL = Rich Teal */
 .kpi-gradient-teal .card {
-    background: linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #2dd4bf 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(20,184,166,0.5), 0 4px 12px rgba(20,184,166,0.2) !important;
+    background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #14b8a6 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(20,184,166,0.52), 0 4px 14px rgba(20,184,166,0.20) !important;
 }
+
+/* ROSE = Deep Rose */
 .kpi-gradient-rose .card {
-    background: linear-gradient(135deg, #be185d 0%, #ec4899 50%, #f9a8d4 100%) !important;
-    box-shadow: 0 16px 40px -8px rgba(236,72,153,0.5), 0 4px 12px rgba(236,72,153,0.2) !important;
+    background: linear-gradient(135deg, #9d174d 0%, #be185d 40%, #ec4899 100%) !important;
+    box-shadow: 0 16px 44px -8px rgba(190,24,93,0.52), 0 4px 14px rgba(190,24,93,0.20) !important;
 }
 
 .kpi-card .card-body {
@@ -291,10 +495,10 @@
     box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04) !important;
 }
 
-/* ── Dark Gradient Card Header ─────────────────────────── */
+/* ── Dark Card Header — Obsidian Gold ──────────────────── */
 .card-header-dark {
     padding: 18px 24px;
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #1e293b 100%);
+    background: linear-gradient(135deg, #0E0C09 0%, #1A1814 55%, #2C2820 100%);
     border-bottom: none;
     display: flex;
     align-items: center;
@@ -302,59 +506,60 @@
     position: relative;
     overflow: hidden;
 }
+/* Gold dot grid on header */
+.card-header-dark::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(245,166,35,0.10) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none; z-index: 0;
+}
+/* Gold top line */
 .card-header-dark::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 32px 32px;
+    top: 0; left: 0; right: 0; height: 2.5px;
+    background: linear-gradient(90deg,
+        transparent, #B8720A 15%, #F5A623 45%,
+        #FFD95A 55%, #F5A623 75%, #D4880A 90%, transparent
+    );
+    background-size: 200% 100%;
+    animation: goldFlow 7s ease infinite;
     pointer-events: none;
 }
 .card-header-dark .section-title-white {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #fff;
+    font-size: 0.9rem; font-weight: 700;
+    color: rgba(245,220,155,0.92);
     letter-spacing: -0.01em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-    position: relative;
-    z-index: 1;
+    display: flex; align-items: center; gap: 10px;
+    margin: 0; position: relative; z-index: 1;
 }
 .card-header-dark .section-icon-glow {
     width: 34px; height: 34px;
     border-radius: 10px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(245,166,35,0.14);
+    border: 1px solid rgba(245,166,35,0.25);
+    display: flex; align-items: center; justify-content: center;
     font-size: 0.9rem;
-    color: #fff;
+    color: var(--sg-gold-true);
 }
 .card-header-dark .dash-view-all-white {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.65);
+    font-size: 0.75rem; font-weight: 600;
+    color: rgba(245,210,130,0.65);
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 10px;
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.07);
-    transition: all 0.2s ease;
-    position: relative;
-    z-index: 1;
+    border: 1px solid rgba(245,166,35,0.18);
+    background: rgba(245,166,35,0.07);
+    transition: all 0.25s ease;
+    position: relative; z-index: 1;
     white-space: nowrap;
 }
 .card-header-dark .dash-view-all-white:hover {
-    background: rgba(255,255,255,0.14);
-    color: #fff;
+    background: rgba(245,166,35,0.15);
+    border-color: rgba(245,166,35,0.35);
+    color: #FFD95A;
 }
 /* Colored orb in header */
 .card-header-orb {
@@ -679,6 +884,11 @@
 
 <!-- Hero Welcome Banner -->
 <div class="dash-hero dash-anim dash-anim-1">
+    <!-- Gold shimmer top bar -->
+    <div class="dash-hero-top-bar"></div>
+    <!-- Left gold edge -->
+    <div class="dash-hero-edge"></div>
+    <!-- Gold ambient orbs -->
     <div class="dash-hero-orb dash-hero-orb-1"></div>
     <div class="dash-hero-orb dash-hero-orb-2"></div>
     <div class="dash-hero-content">
@@ -687,10 +897,10 @@
                 {% now "H" as current_hour %}
                 {% if current_hour|add:"0" < 12 %}🌅 Good Morning{% elif current_hour|add:"0" < 17 %}☀️ Good Afternoon{% else %}🌙 Good Evening{% endif %}, {{ user.first_name|default:user.username }}!
             </h2>
-            <p>Here's what's happening at <strong style="color:rgba(255,255,255,0.9);">Rahman Anis &amp; Co.</strong> today.</p>
+            <p>Here's what's happening at <strong>Rahman Anis &amp; Co.</strong> today.</p>
             <div class="dash-hero-stats mt-3">
                 <div class="dash-hero-pill">
-                    <i class="bi bi-people-fill"></i>
+                    <i class="bi bi-people-fill" style="color:#FFD95A;"></i>
                     {{ total_students|default:"0" }} Students
                 </div>
                 <div class="dash-hero-pill">
@@ -698,7 +908,7 @@
                     {{ present_today|default:"0" }} Present
                 </div>
                 <div class="dash-hero-pill">
-                    <i class="bi bi-hourglass-split" style="color:#fde68a;"></i>
+                    <i class="bi bi-hourglass-split" style="color:#FFC94A;"></i>
                     {{ pending_leaves|default:"0" }} Pending
                 </div>
             </div>
@@ -1017,9 +1227,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (attCtx) {
         const ctx = attCtx.getContext('2d');
         const grad = ctx.createLinearGradient(0, 0, 0, 260);
-        grad.addColorStop(0, 'rgba(99,102,241,0.25)');
-        grad.addColorStop(0.7, 'rgba(99,102,241,0.05)');
-        grad.addColorStop(1, 'rgba(99,102,241,0)');
+        grad.addColorStop(0, 'rgba(245,166,35,0.28)');
+        grad.addColorStop(0.7, 'rgba(212,136,10,0.06)');
+        grad.addColorStop(1, 'rgba(212,136,10,0)');
 
         new Chart(ctx, {
             type: 'line',
@@ -1028,17 +1238,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 datasets: [{
                     label: 'Students Present',
                     data: {{ attendance_trend_data|safe }},
-                    borderColor: '#6366f1',
+                    borderColor: '#F5A623',
                     backgroundColor: grad,
                     borderWidth: 3,
                     fill: true,
                     tension: 0.45,
                     pointRadius: 5,
-                    pointBackgroundColor: '#6366f1',
-                    pointBorderColor: isDark ? '#111117' : '#fff',
+                    pointBackgroundColor: '#F5A623',
+                    pointBorderColor: isDark ? '#1A1814' : '#fff',
                     pointBorderWidth: 3,
                     pointHoverRadius: 8,
-                    pointHoverBackgroundColor: '#6366f1',
+                    pointHoverBackgroundColor: '#FFD95A',
                     pointHoverBorderColor: '#fff',
                     pointHoverBorderWidth: 3,
                 }]
@@ -1052,7 +1262,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         backgroundColor: isDark ? '#1a1a2e' : '#fff',
                         titleColor: isDark ? '#f0f0f5' : '#0f172a',
                         bodyColor: isDark ? '#a1a1aa' : '#64748b',
-                        borderColor: isDark ? 'rgba(99,102,241,0.3)' : 'rgba(99,102,241,0.2)',
+                        borderColor: isDark ? 'rgba(212,136,10,0.35)' : 'rgba(245,166,35,0.25)',
                         borderWidth: 1,
                         padding: 14,
                         cornerRadius: 12,
@@ -1114,6 +1324,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <!-- Hero Welcome Banner -->
 <div class="dash-hero dash-anim dash-anim-1">
+    <!-- Gold shimmer top bar -->
+    <div class="dash-hero-top-bar"></div>
+    <!-- Left gold edge -->
+    <div class="dash-hero-edge"></div>
+    <!-- Gold ambient orbs -->
     <div class="dash-hero-orb dash-hero-orb-1"></div>
     <div class="dash-hero-orb dash-hero-orb-2"></div>
     <div class="dash-hero-content">
@@ -1125,7 +1340,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <p>Your personal attendance tracker &amp; daily overview.</p>
             <div class="dash-hero-stats mt-3">
                 <div class="dash-hero-pill">
-                    <i class="bi bi-shield-check-fill" style="color:#a5b4fc;"></i>
+                    <i class="bi bi-shield-check-fill" style="color:#FFD95A;"></i>
                     {{ user.role }}
                 </div>
                 <div class="dash-hero-pill">

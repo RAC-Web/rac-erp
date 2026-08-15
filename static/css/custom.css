@@ -1,227 +1,188 @@
-/* ═══════════════════════════════════════════════════════════
-   RAC HRMS — CUSTOM ENHANCEMENTS v3.0
-   Premium micro-interactions & polish
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   RAC HRMS — SOVEREIGN GOLD ENHANCEMENTS v5.0
+   Premium micro-interactions, polish & brand-specific overrides
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* ── Staggered Entrance Animations ─────────────────────── */
+/* ── Staggered Entrance Animations ────────────────────────────── */
 @keyframes fadeInUpStagger {
-    0% { opacity: 0; transform: translateY(24px) scale(0.98); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+    0%   { opacity: 0; transform: translateY(22px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0)    scale(1.00); }
+}
+.stagger-1 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both; }
+.stagger-2 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.09s both; }
+.stagger-3 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both; }
+.stagger-4 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.19s both; }
+.stagger-5 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both; }
+.stagger-6 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.29s both; }
+.stagger-7 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.34s both; }
+.stagger-8 { animation: fadeInUpStagger 0.52s cubic-bezier(0.22, 1, 0.36, 1) 0.39s both; }
+
+/* ── Login Page — Sovereign Gold Override ──────────────────────── */
+/* Remove any old purple/violet overrides entirely */
+.login-panel-left {
+    background: linear-gradient(160deg, #0E0C09 0%, #1A1814 40%, #2C2820 100%) !important;
+    background-size: unset !important;
+    animation: none !important;
 }
 
-.stagger-1 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-.stagger-2 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
-.stagger-3 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
-.stagger-4 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
-.stagger-5 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
-.stagger-6 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
-.stagger-7 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
-.stagger-8 { animation: fadeInUpStagger 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
-
-/* ── Sidebar Logo Pulse ────────────────────────────────── */
-.sidebar-brand h4 {
-    position: relative;
-    display: inline-block;
+/* Gold pulsing login background */
+@keyframes loginGoldGlow {
+    0%,100% { opacity: 0.7; }
+    50%      { opacity: 1.0; }
 }
 
-/* ── Sidebar Link Micro-interactions ───────────────────── */
+/* ── Sidebar Nav — Gold Dot Indicator ──────────────────────────── */
 .sidebar .nav-link {
     position: relative;
     overflow: hidden;
 }
 
-.sidebar .nav-link::after {
+/* Active pulse dot */
+.sidebar .nav-link.active::before {
     content: '';
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%) translateX(6px);
-    width: 4px;
-    height: 4px;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    width: 5px; height: 5px;
     border-radius: 50%;
-    background: var(--elite-primary);
-    opacity: 0;
-    transition: all 0.3s var(--elite-ease);
+    background: var(--sg-gold-true);
+    box-shadow: 0 0 8px rgba(245,166,35,0.80);
+    animation: pulse 2.5s ease-in-out infinite;
 }
 
-.sidebar .nav-link:hover::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-}
-
-.sidebar .nav-link.active::after {
-    display: none;
-}
-
-/* ── Notification Bell Animation ───────────────────────── */
+/* ── Notification Bell — Gold Ring ────────────────────────────── */
 .dropdown .bi-bell-fill {
-    transition: transform 0.3s var(--elite-ease-bounce);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
 }
-
 .dropdown:hover .bi-bell-fill {
-    transform: rotate(15deg) scale(1.1);
+    transform: rotate(18deg) scale(1.12);
+    color: var(--sg-gold-true);
 }
 
-/* ── Card Gradient Border on Hover ─────────────────────── */
-.card {
-    position: relative;
-}
-
-/* ── Table Row Slide-in Animation ──────────────────────── */
+/* ── Table Row Animation ───────────────────────────────────────── */
 .elite-table-wrap tbody tr {
-    animation: fadeInUp 0.35s var(--elite-ease) both;
+    animation: fadeInUpStagger 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-
-.elite-table-wrap tbody tr:nth-child(1) { animation-delay: 0.02s; }
-.elite-table-wrap tbody tr:nth-child(2) { animation-delay: 0.04s; }
-.elite-table-wrap tbody tr:nth-child(3) { animation-delay: 0.06s; }
-.elite-table-wrap tbody tr:nth-child(4) { animation-delay: 0.08s; }
-.elite-table-wrap tbody tr:nth-child(5) { animation-delay: 0.10s; }
-.elite-table-wrap tbody tr:nth-child(6) { animation-delay: 0.12s; }
-.elite-table-wrap tbody tr:nth-child(7) { animation-delay: 0.14s; }
-.elite-table-wrap tbody tr:nth-child(8) { animation-delay: 0.16s; }
-.elite-table-wrap tbody tr:nth-child(9) { animation-delay: 0.18s; }
+.elite-table-wrap tbody tr:nth-child(1)  { animation-delay: 0.02s; }
+.elite-table-wrap tbody tr:nth-child(2)  { animation-delay: 0.04s; }
+.elite-table-wrap tbody tr:nth-child(3)  { animation-delay: 0.06s; }
+.elite-table-wrap tbody tr:nth-child(4)  { animation-delay: 0.08s; }
+.elite-table-wrap tbody tr:nth-child(5)  { animation-delay: 0.10s; }
+.elite-table-wrap tbody tr:nth-child(6)  { animation-delay: 0.12s; }
+.elite-table-wrap tbody tr:nth-child(7)  { animation-delay: 0.14s; }
+.elite-table-wrap tbody tr:nth-child(8)  { animation-delay: 0.16s; }
+.elite-table-wrap tbody tr:nth-child(9)  { animation-delay: 0.18s; }
 .elite-table-wrap tbody tr:nth-child(10) { animation-delay: 0.20s; }
 
-/* ── Premium Input Focus Ring ──────────────────────────── */
+/* ── Form Focus — Gold Ring ────────────────────────────────────── */
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--elite-primary) !important;
-    box-shadow: 0 0 0 3px var(--elite-primary-glow),
-                0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    border-color: var(--sg-gold-true) !important;
+    box-shadow:
+        0 0 0 3px rgba(212, 136, 10, 0.18),
+        0 2px 8px rgba(212, 136, 10, 0.10) !important;
+    outline: none !important;
 }
 
-/* ── Login Page Enhancement ────────────────────────────── */
-.login-panel-left {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 30%, #8b5cf6 60%, #6366f1 100%) !important;
-    background-size: 300% 300% !important;
-    animation: loginGradient 10s ease infinite !important;
-}
-
-@keyframes loginGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
+/* ── Login Card — Sovereign Upgrade ───────────────────────────── */
 .login-card .card {
-    box-shadow: var(--elite-shadow-lg) !important;
-    border: 1px solid var(--elite-border) !important;
+    box-shadow:
+        0 28px 80px -16px rgba(26,24,20,0.14),
+        0 8px 28px rgba(26,24,20,0.07),
+        inset 0 1px 0 rgba(255,255,255,0.82) !important;
+    border: 1px solid var(--elite-border-strong) !important;
     transition: box-shadow 0.4s var(--elite-ease);
 }
-
 .login-card .card:hover {
-    box-shadow: var(--elite-shadow-xl) !important;
+    box-shadow:
+        0 36px 96px -16px rgba(26,24,20,0.18),
+        0 12px 36px rgba(26,24,20,0.09),
+        inset 0 1px 0 rgba(255,255,255,0.85) !important;
+}
+[data-bs-theme="dark"] .login-card .card {
+    box-shadow:
+        0 28px 80px -16px rgba(0,0,0,0.65),
+        0 8px 28px rgba(0,0,0,0.40),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
 }
 
 .login-card .btn-primary {
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    padding: 14px !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.025em !important;
+    padding: 15px !important;
 }
 
-/* ── Premium Tooltip Style ─────────────────────────────── */
+/* ── Clock Widget — Live Gold Shine ───────────────────────────── */
+.clock-widget {
+    background: linear-gradient(135deg, #B8720A, #F5A623, #FFD95A, #F5A623, #D4880A) !important;
+    background-size: 300% 100% !important;
+    animation: goldFlow 5s linear infinite !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* ── Tooltip — Premium ────────────────────────────────────────── */
 .tooltip-inner {
     background: var(--elite-surface-solid);
     color: var(--elite-text);
-    border: 1px solid var(--elite-border);
+    border: 1px solid var(--elite-border-strong);
     border-radius: var(--elite-radius-sm);
     box-shadow: var(--elite-shadow-lg);
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 6px 12px;
+    font-size: 0.79rem; font-weight: 500; padding: 7px 13px;
 }
 
-/* ── Chart Canvas Polish ───────────────────────────────── */
-canvas {
-    border-radius: var(--elite-radius-sm);
-}
-
-/* ── Clock Gradient Enhancement ────────────────────────── */
-.clock-widget {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa) !important;
-    background-size: 200% 200%;
-    animation: gradientBorder 4s ease infinite;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-}
-
-/* ── Breadcrumb Style ──────────────────────────────────── */
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 0;
-}
-
+/* ── Breadcrumb ───────────────────────────────────────────────── */
+.breadcrumb { background: transparent; padding: 0; margin-bottom: 0; }
 .breadcrumb-item a {
-    color: var(--elite-text-muted);
-    text-decoration: none;
-    font-size: 0.82rem;
-    transition: color 0.2s var(--elite-ease);
+    color: var(--elite-text-muted); text-decoration: none;
+    font-size: 0.82rem; transition: color 0.22s ease;
 }
+.breadcrumb-item a:hover { color: var(--sg-gold-burnish); }
+.breadcrumb-item.active { color: var(--elite-text-secondary); font-size: 0.82rem; }
 
-.breadcrumb-item a:hover {
-    color: var(--elite-primary);
-}
+/* ── Chart Canvas ─────────────────────────────────────────────── */
+canvas { border-radius: var(--elite-radius-sm); }
 
-.breadcrumb-item.active {
-    color: var(--elite-text-secondary);
-    font-size: 0.82rem;
-}
+/* ── Card Separator ───────────────────────────────────────────── */
+.card .card-body + .card-body { border-top: 1px solid var(--elite-border); }
 
-/* ── Premium Spinner ───────────────────────────────────── */
-.spinner-border {
-    border-color: var(--elite-primary-subtle);
-    border-right-color: var(--elite-primary);
-}
+/* ── Table Footer ─────────────────────────────────────────────── */
+.elite-table-wrap tfoot tr { background: var(--elite-surface-elevated) !important; border-top: 2px solid var(--elite-border-strong); }
+.elite-table-wrap tfoot td { padding: 14px 18px !important; font-size: 0.88rem; }
+.elite-table-wrap .table tbody tr td[colspan] { background: transparent !important; }
 
-/* ── Card Internal Separator ───────────────────────────── */
-.card .card-body + .card-body {
-    border-top: 1px solid var(--elite-border);
-}
+/* ── Stat Value — Tabular ─────────────────────────────────────── */
+.stat-value { font-variant-numeric: tabular-nums; }
 
-/* ── Table Footer Premium ──────────────────────────────── */
-.elite-table-wrap tfoot tr {
-    background: var(--elite-surface-elevated) !important;
-    border-top: 2px solid var(--elite-border);
-}
-
-.elite-table-wrap tfoot td {
-    padding: 14px 16px !important;
-    font-size: 0.88rem;
-}
-
-/* ── Smooth Number Transitions ─────────────────────────── */
-.stat-value {
-    font-variant-numeric: tabular-nums;
-}
-
-/* ── Progress Bar Premium ──────────────────────────────── */
+/* ── Progress Bar ─────────────────────────────────────────────── */
 .progress {
     border-radius: var(--elite-radius-full);
     height: 6px;
     background: var(--elite-surface-elevated);
     overflow: hidden;
 }
-
 .progress-bar {
     border-radius: var(--elite-radius-full);
-    background: var(--elite-gradient-primary);
-    transition: width 0.8s var(--elite-ease);
+    background: linear-gradient(135deg, #D4880A 0%, #F5A623 50%, #FFD95A 100%);
+    background-size: 200% auto;
+    animation: goldFlow 5s linear infinite;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── Premium Select2 / Custom Select ───────────────────── */
+/* ── Form Select Arrow — Warm ─────────────────────────────────── */
 .form-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%239C8E7E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
     background-size: 14px 14px;
 }
 
-/* ── Empty Table State Enhancement ─────────────────────── */
-.elite-table-wrap .table tbody tr td[colspan] {
-    background: transparent !important;
+/* ── Spinner — Gold ───────────────────────────────────────────── */
+.spinner-border {
+    border-color: rgba(212, 136, 10, 0.18);
+    border-right-color: var(--sg-gold-true);
 }
 
-/* ── Accessibility: Reduced Motion ─────────────────────── */
+/* ── Accessibility ────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;

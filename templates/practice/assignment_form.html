@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-12 col-lg-8 col-xl-7">
+
+    <!-- Page Header -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a href="{% url 'practice:assignment_list' %}" class="btn btn-sm"
+           style="background:var(--elite-surface-elevated);border:1px solid var(--elite-border);color:var(--elite-text-muted);">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h4 class="mb-0 fw-bold">
+                {% if is_edit %}
+                    <i class="bi bi-pencil-square me-2 text-gradient"></i>Edit Assignment
+                {% else %}
+                    <i class="bi bi-plus-circle me-2 text-gradient"></i>New Assignment
+                {% endif %}
+            </h4>
+            {% if is_edit %}
+            <p class="mb-0 small" style="color:var(--elite-text-muted);">
+                {{ object.client.name }} — {{ object.work_type.name|default:"" }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="card" style="border-radius:20px; border:1px solid rgba(212,136,10,0.20);
+        box-shadow:0 8px 32px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.80);
+        overflow:hidden;">
+
+        <!-- Gold top accent bar -->
+        <div style="height:3px; background:linear-gradient(90deg,
+            transparent, #B8720A 15%, #F5A623 45%, #FFD95A 55%, #F5A623 75%, transparent);
+            background-size:200% 100%; animation:goldFlow 5s ease infinite;"></div>
+
+        <div class="card-body p-4 p-lg-5">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Row 1: Client + Work Type -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-building me-1" style="color:var(--sg-gold-true);"></i>Client
+                        </label>
+                        {{ form.client }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-tag-fill me-1" style="color:var(--sg-gold-true);"></i>Work Type
+                        </label>
+                        {{ form.work_type }}
+                    </div>
+                </div>
+
+                <!-- Row 2: Title -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">
+                        <i class="bi bi-card-heading me-1" style="color:var(--sg-gold-true);"></i>Assignment Title
+                    </label>
+                    {{ form.title }}
+                </div>
+
+                <!-- Row 3: Dates -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-calendar-event me-1" style="color:var(--sg-gold-true);"></i>Start Date
+                        </label>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold small">
+                            <i class="bi bi-flag-fill me-1" style="color:var(--elite-rose);"></i>Deadline
+                        </label>
+                        {{ form.deadline }}
+                    </div>
+                </div>
+
+                <!-- Row 4: Status -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">
+                        <i class="bi bi-circle-half me-1" style="color:var(--sg-gold-true);"></i>Status
+                    </label>
+                    {{ form.status }}
+                    <!-- Visual status helper -->
+                    <div class="d-flex gap-2 flex-wrap mt-2" id="statusHelpers">
+                        <span class="badge rounded-pill" style="background:rgba(99,102,241,0.12);color:#6366f1;border:1px solid rgba(99,102,241,0.25);font-size:0.72rem;cursor:pointer;"
+                            onclick="document.getElementById('id_status').value='Not Started'">
+                            📋 Not Started
+                        </span>
+                        <span class="badge rounded-pill" style="background:rgba(14,165,233,0.12);color:#0ea5e9;border:1px solid rgba(14,165,233,0.25);font-size:0.72rem;cursor:pointer;"
+                            onclick="document.getElementById('id_status').value='In Progress'">
+                            🔄 In Progress
+                        </span>
+                        <span class="badge rounded-pill" style="background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.25);font-size:0.72rem;cursor:pointer;"
+                            onclick="document.getElementById('id_status').value='On Hold'">
+                            ⏸️ On Hold
+                        </span>
+                        <span class="badge rounded-pill" style="background:rgba(5,150,105,0.12);color:#059669;border:1px solid rgba(5,150,105,0.25);font-size:0.72rem;cursor:pointer;"
+                            onclick="document.getElementById('id_status').value='Completed'">
+                            ✅ Completed
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Row 5: Assigned Students -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small">
+                        <i class="bi bi-people-fill me-1" style="color:var(--sg-gold-true);"></i>
+                        Assigned Students / Staff
+                        <span class="ms-1" style="color:var(--elite-text-muted);font-weight:400;">(Hold Ctrl/Cmd to multi-select)</span>
+                    </label>
+                    <div style="border:1.5px solid var(--elite-border);border-radius:12px;overflow:hidden;
+                        transition:border-color 0.22s ease;">
+                        {{ form.assigned_students }}
+                    </div>
+                </div>
+
+                <hr style="border-color:var(--elite-border);margin-bottom:24px;">
+
+                <!-- Submit buttons -->
+                <div class="d-flex gap-3 align-items-center">
+                    <button type="submit" class="btn btn-primary fw-bold px-4 py-2" style="min-width:160px;">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        {% if is_edit %}Save Changes{% else %}Create Assignment{% endif %}
+                    </button>
+                    <a href="{% url 'practice:assignment_list' %}" class="btn fw-semibold"
+                       style="background:var(--elite-surface-elevated);border:1px solid var(--elite-border);
+                       color:var(--elite-text-muted);">
+                        <i class="bi bi-x-lg me-1"></i> Cancel
+                    </a>
+                    {% if is_edit %}
+                    <span class="ms-auto small" style="color:var(--elite-text-muted);">
+                        <i class="bi bi-info-circle me-1"></i>ID #{{ object.pk }}
+                    </span>
+                    {% endif %}
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Danger Zone: only for edit -->
+    {% if is_edit %}
+    <div class="card mt-3" style="border-radius:16px;border:1px solid rgba(225,29,72,0.20);
+        background:rgba(225,29,72,0.03);">
+        <div class="card-body p-4">
+            <h6 class="fw-bold mb-1" style="color:var(--elite-rose);">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>Danger Zone
+            </h6>
+            <p class="small mb-3" style="color:var(--elite-text-muted);">
+                Deleting this assignment is permanent and cannot be undone.
+            </p>
+            <a href="/admin/practice/assignment/{{ object.pk }}/delete/"
+               class="btn btn-sm btn-outline-danger fw-semibold" target="_blank"
+               onclick="return confirm('Are you sure you want to delete this assignment? This cannot be undone.')">
+                <i class="bi bi-trash3-fill me-1"></i> Delete Assignment
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+</div>
+
+<style>
+/* Form field polish */
+#id_client, #id_work_type, #id_status, #id_title,
+#id_start_date, #id_deadline {
+    border-radius: 10px !important;
+    border: 1.5px solid var(--elite-border) !important;
+    background: var(--elite-surface-solid) !important;
+    color: var(--elite-text) !important;
+    padding: 10px 14px !important;
+    width: 100% !important;
+    font-size: 0.92rem !important;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease !important;
+}
+#id_client:focus, #id_work_type:focus, #id_status:focus,
+#id_title:focus, #id_start_date:focus, #id_deadline:focus {
+    border-color: var(--sg-gold-true) !important;
+    box-shadow: 0 0 0 3px rgba(212,136,10,0.15) !important;
+    outline: none !important;
+}
+
+/* Multi-select for students */
+#id_assigned_students {
+    width: 100% !important;
+    min-height: 180px !important;
+    border: none !important;
+    background: var(--elite-surface-solid) !important;
+    color: var(--elite-text) !important;
+    padding: 6px !important;
+    font-size: 0.88rem !important;
+}
+#id_assigned_students option {
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    margin: 2px 0 !important;
+}
+#id_assigned_students option:checked {
+    background: linear-gradient(135deg, #D4880A, #F5A623) !important;
+    color: #1A1814 !important;
+}
+div[style*="border:1.5px"]:focus-within {
+    border-color: var(--sg-gold-true) !important;
+    box-shadow: 0 0 0 3px rgba(212,136,10,0.12) !important;
+}
+</style>
+{% endblock %}
