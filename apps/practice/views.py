@@ -14,7 +14,7 @@ class ManagerRequiredMixin(UserPassesTestMixin):
 
 class ClientCreateView(ManagerRequiredMixin, CreateView):
     model = Client
-    fields = ['name', 'client_id', 'contact_person', 'email', 'phone', 'address', 'status']
+    fields = ['name', 'contact_person', 'email', 'phone', 'address', 'status']
     template_name = 'core/form.html'
     success_url = reverse_lazy('practice:client_list')
 
@@ -30,7 +30,7 @@ class ClientCreateView(ManagerRequiredMixin, CreateView):
 
 class ClientUpdateView(ManagerRequiredMixin, UpdateView):
     model = Client
-    fields = ['name', 'client_id', 'contact_person', 'email', 'phone', 'address', 'status']
+    fields = ['name', 'contact_person', 'email', 'phone', 'address', 'status']
     template_name = 'core/form.html'
     success_url = reverse_lazy('practice:client_list')
 
